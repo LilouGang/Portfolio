@@ -4,9 +4,49 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
-  title: 'Votre Portfolio',
-  description: '...',
-}
+  title: {
+    default: 'Killian Lacaque | Portfolio',
+  },
+  
+  description: 'Portfolio de Killian Lacaque. Curieux et passionné par les sciences, le trekking et la nature. Découvrez mon univers, mes projets et mes explorations.',
+  
+  keywords: [
+    'Développeur', 
+    'Portfolio', 
+    'Killian', 
+    'Astronomie', 
+    'Trekking', 
+    'Nature', 
+    'Photographie',
+    'Exploration'
+  ],
+
+  // Auteur du site
+  authors: [{ name: 'Killian Lacaque' }],
+  
+  // Pour dire aux robots d'indexer la page
+  robots: {
+    index: true,
+    follow: true,
+  },
+
+  openGraph: {
+    title: 'Killian Lacaque | Développeur & Explorateur',
+    description: 'Curieux de nature, fasciné par le fonctionnement du monde. Découvrez mon portfolio mêlant code et passions.',
+    url: 'https://https://portfolio-three-nu-49.vercel.app/', // Remplace par ta vraie URL quand tu en auras une
+    siteName: 'Killian Lacaque',
+    locale: 'fr_FR',
+    type: 'website',
+    images: [
+      {
+        url: 'https://https://portfolio-three-nu-49.vercel.app/og-image.jpg', // Idéalement, une image de toi ou de ton univers
+        width: 1200,
+        height: 630,
+        alt: 'Killian Lacaque Portfolio',
+      },
+    ],
+  },
+};
 
 export default function RootLayout({ children }) {
   return (

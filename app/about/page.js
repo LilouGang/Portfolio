@@ -17,7 +17,9 @@ import {
   CloudRain,
   Snowflake,
   Loader2,
-  Wind
+  Wind,
+  CloudLightning,
+  CloudDrizzle
 } from 'lucide-react';
 
 // --- COMPOSANT : ITEM PASSION ---
@@ -40,32 +42,63 @@ const AppleWeatherCard = () => {
 
   // Détermine le style (dégradé + icône) selon la météo
   const getWeatherStyle = (conditionId) => {
-    // Codes OpenWeatherMap : 2xx (Orage), 3xx (Bruine), 5xx (Pluie), 6xx (Neige), 800 (Clair), 80x (Nuages)
+    // Codes OpenWeatherMap : https://openweathermap.org/weather-conditions
     const id = conditionId || 800;
     
-    if (id >= 200 && id < 600) {
+    // ORAGE (2xx)
+    if (id >= 200 && id < 300) {
       return { 
-        gradient: "from-slate-700 to-slate-900", 
-        icon: <CloudRain size={80} className="text-blue-200" />,
+        gradient: "from-[#203A43] to-[#2C5364]", // Gris sombre orageux
+        icon: <CloudLightning size={100} className="text-yellow-400" />,
+        animation: { scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] } 
+      };
+    } 
+    // BRUINE (3xx)
+    else if (id >= 300 && id < 400) {
+      return { 
+        gradient: "from-[#4B79A1] to-[#283E51]", // Bleu gris mouillé
+        icon: <CloudDrizzle size={100} className="text-blue-200" />,
+        animation: { y: [0, 3, 0] } 
+      };
+    }
+    // PLUIE (5xx)
+    else if (id >= 500 && id < 600) {
+      return { 
+        gradient: "from-[#2c3e50] to-[#4ca1af]", // Bleu profond pluie
+        icon: <CloudRain size={100} className="text-blue-100" />,
         animation: { y: [0, 5, 0] } 
       };
-    } else if (id >= 600 && id < 700) {
+    } 
+    // NEIGE (6xx)
+    else if (id >= 600 && id < 700) {
       return { 
-        gradient: "from-blue-200 to-slate-400", 
-        icon: <Snowflake size={80} className="text-white" />,
+        gradient: "from-[#83a4d4] to-[#b6fbff]", // Bleu glacé
+        icon: <Snowflake size={100} className="text-white" />,
         animation: { rotate: [0, 45, 0] } 
       };
-    } else if (id === 800) {
+    } 
+    // ATMOSPHERE (7xx - Brouillard etc)
+    else if (id >= 700 && id < 800) {
       return { 
-        gradient: "from-[#4ca2ff] to-[#007aff]", 
-        icon: <Sun size={80} className="text-yellow-300" />,
+        gradient: "from-[#757F9A] to-[#D7DDE8]", // Gris brume
+        icon: <Wind size={100} className="text-neutral-100" />,
+        animation: { x: [-10, 10, -10] } 
+      };
+    }
+    // CLAIR (800)
+    else if (id === 800) {
+      return { 
+        gradient: "from-[#2980B9] to-[#6DD5FA]", // Bleu ciel vibrant
+        icon: <Sun size={100} className="text-yellow-300" />,
         animation: { rotate: 360 } 
       };
-    } else {
+    } 
+    // NUAGES (80x)
+    else {
       return { 
-        gradient: "from-slate-400 to-slate-600", 
-        icon: <Cloud size={80} className="text-white/80" />,
-        animation: { x: [-10, 10, -10] } 
+        gradient: "from-[#5D7EA8] to-[#8FAAC9]", // Bleu nuageux doux
+        icon: <Cloud size={100} className="text-white/90" />,
+        animation: { x: [-5, 5, -5] } 
       };
     }
   };
@@ -85,10 +118,11 @@ const AppleWeatherCard = () => {
           desc: data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1),
           high: Math.round(data.main.temp_max),
           low: Math.round(data.main.temp_min),
-          id: data.weather[0].id
+          id: data.weather[0].id,
+          isFallback: false
         });
       } catch (err) {
-        // Fallback (Paris) si erreur ou refus géoloc
+        // Fallback (Paris)
         setWeather({ temp: 18, city: 'Paris', desc: 'Nuageux', high: 20, low: 15, id: 802, isFallback: true });
       } finally {
         setLoading(false);
@@ -98,7 +132,7 @@ const AppleWeatherCard = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-        () => fetchWeather(48.8566, 2.3522) // Paris par défaut
+        () => fetchWeather(48.8566, 2.3522) 
       );
     } else {
       fetchWeather(48.8566, 2.3522);
@@ -108,24 +142,25 @@ const AppleWeatherCard = () => {
   const style = getWeatherStyle(weather?.id);
 
   return (
-    <div className={`h-full w-full bg-gradient-to-b ${loading ? 'from-gray-200 to-gray-300' : style.gradient} text-white p-6 flex flex-col justify-between relative overflow-hidden transition-colors duration-1000`}>
+    <div className={`h-full w-full bg-gradient-to-br ${loading ? 'from-gray-300 to-gray-400' : style.gradient} text-white p-6 flex flex-col justify-between relative overflow-hidden transition-all duration-1000`}>
        
        {loading ? (
-         <div className="flex flex-col items-center justify-center h-full gap-2 text-neutral-500">
+         <div className="flex flex-col items-center justify-center h-full gap-2 text-white/80">
             <Loader2 className="animate-spin" />
             <span className="text-xs font-medium">Météo locale...</span>
          </div>
        ) : (
          <>
-            <div className="z-10">
-               <h3 className="text-xl font-bold drop-shadow-md truncate max-w-[140px] flex items-center gap-2">
-                 {weather.city}
-                 {weather.isFallback && <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full" title="Position par défaut"></span>}
+            <div className="z-10 relative">
+               {/* Titre Ville : min-w-0 permet au truncate de marcher dans un flex */}
+               <h3 className="text-xl font-bold drop-shadow-md flex items-center gap-2 w-full min-w-0">
+                 <span className="truncate">{weather.city}</span>
+                 {weather.isFallback && <span className="flex-shrink-0 w-2 h-2 bg-yellow-400 rounded-full shadow-sm" title="Position par défaut"></span>}
                </h3>
-               <p className="text-sm font-medium opacity-90 drop-shadow-sm">{weather.desc}</p>
+               <p className="text-sm font-medium opacity-90 drop-shadow-sm truncate">{weather.desc}</p>
             </div>
 
-            <div className="z-10 flex flex-col">
+            <div className="z-10 relative flex flex-col mt-auto">
                <span className="text-6xl font-thin tracking-tighter drop-shadow-md">{weather.temp}°</span>
                <div className="flex gap-3 text-xs font-medium opacity-90 mt-1">
                  <span>H:{weather.high}°</span>
@@ -133,11 +168,11 @@ const AppleWeatherCard = () => {
                </div>
             </div>
 
-            {/* Animation de fond (Icone Dynamique) */}
+            {/* Animation de fond (Icone Dynamique) - Repositionnée pour être plus visible */}
             <motion.div 
                animate={style.animation}
-               transition={{ duration: style.id === 800 ? 60 : 10, repeat: Infinity, ease: "linear" }}
-               className="absolute -bottom-6 -right-6 opacity-30"
+               transition={{ duration: style.id === 800 ? 60 : 8, repeat: Infinity, ease: "easeInOut" }}
+               className="absolute -bottom-4 -right-4 opacity-40 pointer-events-none"
             >
                {style.icon}
             </motion.div>
