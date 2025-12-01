@@ -3,7 +3,7 @@
 
 import { motion } from 'framer-motion';
 
-const text = "Guidé par la curiosité, je transforme ce qui m'inspire en projets concrets. C'est ici que ma passion pour la découverte rencontre l'art de la création, du pixel à l'horizon.";
+const text = "Guidé par la curiosité, je transforme ce qui m'inspire en projets concrets. C'est ici que ma passion pour la découverte rencontre l'art de la création, où la technique se met au service de l'émotion.";
 
 const containerVariant = {
   animate: {
