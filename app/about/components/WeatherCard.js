@@ -18,11 +18,11 @@ export default function WeatherCard() {
     const id = conditionId || 800;
     // J'ai rendu le ciel "pluie/orage" un peu plus sombre pour l'effet.
     if (id >= 200 && id < 300) return { bg: "bg-gradient-to-br from-gray-900 via-slate-800 to-indigo-950", scene: <ThunderEffect />, textColor: "text-white" };
-    if ((id >= 300 && id < 400) || (id >= 500 && id < 600)) return { bg: "bg-gradient-to-br from-slate-700 via-sky-900 to-slate-800", scene: <RainEffect />, textColor: "text-blue-50" };
+    if ((id >= 300 && id < 400) || (id >= 500 && id < 600)) return { bg: "bg-gradient-to-br from-slate-700 to-sky-900", scene: <RainEffect />, textColor: "text-blue-50" };
     if (id >= 600 && id < 700) return { bg: "bg-gradient-to-br from-blue-200 to-slate-200", scene: <SnowEffect />, textColor: "text-sky-800" };
     if (id >= 700 && id < 800) return { bg: "bg-gradient-to-br from-slate-200 to-slate-400", scene: <CloudsEffect isDark={true} />, textColor: "text-gray-700" };
     // Le SunEffect que vous avez amélioré est dans ce background
-    if (id === 800) return { bg: "bg-gradient-to-br from-blue-300 via-sky-400 to-sky-200", scene: <SunEffect />, textColor: "text-white" };
+    if (id === 800) return { bg: "bg-gradient-to-br from-blue-300 to-sky-400", scene: <SunEffect />, textColor: "text-white" };
     return { bg: "bg-gradient-to-br from-blue-400 to-sky-200", scene: <CloudsEffect />, textColor: "text-white" };
   };
 
@@ -37,8 +37,7 @@ export default function WeatherCard() {
         low: 10, 
         humidity: 82, 
         wind: 25, 
-        // CORRECTION: ID Météo 500 pour la pluie, pas 800.
-        id: 800, 
+        id: 201, 
         isFallback: true 
       });
       setLoading(false); 
@@ -51,7 +50,7 @@ export default function WeatherCard() {
         const API_KEY = "2d60b7baaada43f03ef7517be63e4af6"; 
         
         // --- POUR TESTER LE FALLBACK : Décommentez la ligne ci-dessous pour forcer une erreur API ---
-        throw new Error("Test Fallback API"); 
+        // throw new Error("Test Fallback API"); 
 
         const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=fr&appid=${API_KEY}`);
         
@@ -139,7 +138,7 @@ export default function WeatherCard() {
              </div>
 
              {/* --- FOOTER DÉTAILS --- */}
-             <div className="grid grid-cols-3 gap-2 pt-4 mt-auto border-t border-current/20">
+             <div className="grid grid-cols-3 gap-2 pt-4 mt-auto">
                 
                 {/* 1. Humidité (Gauche) */}
                 <div className="flex flex-col col-span-1 items-start">
@@ -157,9 +156,9 @@ export default function WeatherCard() {
                       <Thermometer size={12} /> Temp.
                    </span>
                    <span className="font-semibold text-base flex gap-1 whitespace-nowrap" style={textShadowStyle}>
-                      <span title="Max">{weather.high}°</span> 
+                      <span title="Max">Max. {weather.high}°</span> 
                       <span className="opacity-60">/</span> 
-                      <span title="Min" className="opacity-90">{weather.low}°</span>
+                      <span title="Min" className="opacity-90">Min. {weather.low}°</span>
                    </span>
                 </div>
 

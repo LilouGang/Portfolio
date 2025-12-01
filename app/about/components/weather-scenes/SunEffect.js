@@ -1,48 +1,77 @@
-// Fichier : app/about/components/weather-scenes/SunEffect.js (Version Corrigée et Simplifiée)
+// Fichier : app/about/components/weather-scenes/SunEffect.js (Version "Haute Visibilité")
 "use client";
+import { motion } from 'framer-motion';
 
 export default function SunEffect() {
+  
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-xl bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600">
-      
-      {/* 1. LUEUR D'AMBIANCE */}
-      <div className="absolute -top-12 -left-12 w-64 h-64 bg-white opacity-30 blur-[80px] rounded-full pointer-events-none" />
+      <div className="relative w-full h-full overflow-hidden rounded-xl">
+
+      {/* 1. LUEUR D'AMBIANCE (Plus intense) */}
+      <motion.div 
+        className="absolute -top-12 -left-12 w-64 h-64 bg-white rounded-full pointer-events-none"
+        initial={{ opacity: 0.4, scale: 1 }}
+        animate={{ opacity: [0.4, 0.5, 0.4], scale: [1, 1.05, 1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        style={{ filter: 'blur(70px)' }}
+      />
 
       {/* 2. LE CONTENEUR GÉANT */}
       <div className="absolute -top-[80%] -left-[80%] w-[250%] h-[250%] rotate-[-45deg] pointer-events-none z-10 flex justify-center">
         
-        {/* --- Les rayons sont maintenant organisés par position (left) --- */}
+        {/* --- Les rayons avec opacité et flou ajustés --- */}
 
-        {/* Rayon 1 (Gauche, Large, Très flou) */}
-        <div 
-          className="absolute h-full w-40 bg-gradient-to-b from-white/10 to-transparent blur-2xl"
-          style={{ left: '30%' }} 
+        {/* Rayon 1 (Gauche) */}
+        <motion.div 
+          className="absolute h-full w-10 bg-gradient-to-b from-white/70 to-transparent"
+          style={{ 
+            left: '37%', 
+            transform: 'rotate(18deg)',
+            filter: 'blur(15px)'
+          }}
+          variants={{ animate: { opacity: [0.7, 1, 0.7] } }}
+          animate="animate"
+          transition={{ duration: 6, delay: 0.5, repeat: Infinity, ease: "easeInOut" }}
         />
         
-        {/* Rayon 2 (Centre-Gauche, Large, Flou) */}
-        <div 
-          className="absolute h-full w-32 bg-gradient-to-b from-white/40 via-white/10 to-transparent blur-xl"
-          style={{ left: '42%' }} 
+        {/* Rayon 2 (Centre) */}
+        <motion.div 
+          className="absolute h-full w-20 bg-gradient-to-b from-white/80 to-transparent"
+          style={{ 
+            left: '47%', 
+            transform: 'rotate(-5deg)',
+            filter: 'blur(25px)'
+          }}
+          variants={{ animate: { opacity: [0.8, 1, 0.8] } }}
+          animate="animate"
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Rayon 3 (Centre, Très fin, Net) */}
-        <div 
-          className="absolute h-full w-6 bg-gradient-to-b from-white/60 via-white/5 to-transparent blur-sm mix-blend-overlay"
-          style={{ left: '48%' }} 
+        {/* Rayon 3 (Centre, fin) */}
+        <motion.div 
+          className="absolute h-full w-6 bg-gradient-to-b from-white/90 to-transparent mix-blend-overlay"
+          style={{ 
+            left: '44%', 
+            transform: 'rotate(5deg)',
+            filter: 'blur(13px)' // Nettement moins flou
+          }}
+          variants={{ animate: { opacity: [0.9, 1, 0.9] } }}
+          animate="animate"
+          transition={{ duration: 4, delay: 1, repeat: Infinity, ease: "easeInOut" }}
         />
         
-        {/* Rayon 4 (Centre-Droite, Fin, Moins flou) */}
-        <div 
-          className="absolute h-full w-12 bg-gradient-to-b from-white/50 via-white/20 to-transparent blur-md mix-blend-overlay"
-          style={{ left: '52%' }} 
+        {/* Rayon 4 (Droite) */}
+        <motion.div 
+          className="absolute h-full w-20 bg-gradient-to-b from-white/70 to-transparent mix-blend-overlay"
+          style={{ 
+            left: '53%', 
+            transform: 'rotate(-20deg)',
+            filter: 'blur(15px)'
+          }}
+          variants={{ animate: { opacity: [0.7, 1, 0.7] } }}
+          animate="animate"
+          transition={{ duration: 5.5, delay: 0.2, repeat: Infinity, ease: "easeInOut" }}
         />
-
-        {/* --- NOUVEAU RAYON 5 (Droite, Moyen, Moins flou) --- */}
-        <div 
-          className="absolute h-full w-20 bg-gradient-to-b from-white/30 to-transparent blur-lg mix-blend-overlay"
-          style={{ left: '58%' }} // On le place clairement à droite des autres
-        />
-
       </div>
     </div>
   );

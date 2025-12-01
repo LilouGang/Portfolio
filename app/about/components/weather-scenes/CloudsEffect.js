@@ -53,7 +53,7 @@ export default function CloudsEffect({ isDark = false }) {
         <motion.div
           key={cloud.id}
           // DÉPART : Hors champ à droite
-          initial={{ x: "300%" }} 
+          initial={{ x: "350%" }} 
           // ARRIVÉE : Hors champ à gauche
           animate={{ x: "-150%" }} 
           transition={{ 
