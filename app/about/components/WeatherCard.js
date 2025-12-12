@@ -37,7 +37,7 @@ export default function WeatherCard() {
         low: 10, 
         humidity: 82, 
         wind: 25, 
-        id: 201, 
+        id: 800, 
         isFallback: true 
       });
       setLoading(false); 

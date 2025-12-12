@@ -6,7 +6,6 @@ import { galleryItems } from '@/lib/data';
 
 // --- Le Catalogue des Mises en Page ---
 import IcelandPage from './iceland/IcelandPage';
-// import NovaPage from './nova/NovaPage'; // Prêt pour le futur
 
 export default function ProjectPage({ params: paramsPromise }) {
   const params = use(paramsPromise);
@@ -20,13 +19,8 @@ export default function ProjectPage({ params: paramsPromise }) {
 
   // --- Étape 2 : L'Aiguillage Intelligent ---
   switch (project.id) {
-    case 2: // ID de l'Islande
+    case 1: // ID de l'Islande
       return <IcelandPage project={project} />;
-    
-    // case 1: // ID de Nova
-    //   return <NovaPage project={project} />;
-
-    // --- Étape 3 : Si aucune mise en page n'est trouvée ---
     default:
       return <ProjectPageNotAvailable project={project} />;
   }

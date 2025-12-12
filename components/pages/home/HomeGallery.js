@@ -6,10 +6,9 @@ import { galleryItems } from '@/lib/data';
 import Link from 'next/link';
 
 // --- CONSTANTE DE SYNCHRONISATION ---
-// C'est le secret : on utilise la même durée et la même courbe partout.
 const colorTransition = { duration: 0.8, ease: "easeInOut" };
 
-// --- Fonction utilitaire (Inchangée) ---
+// --- Fonctions utilitaires & Variants (Inchangés) ---
 function getContrastingTextColor(hexColor) {
   if (!hexColor) return '#111827'; 
   const r = parseInt(hexColor.substr(1, 2), 16);
@@ -19,9 +18,31 @@ function getContrastingTextColor(hexColor) {
   return (yiq >= 128) ? '#111827' : '#ffffff';
 }
 
-// --- Composant "GalleryItem" (Inchangé) ---
-function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColor }) {
-  // ... (Gardez tout le code du GalleryItem tel quel) ...
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+  const newArray = [...array]; 
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [newArray[currentIndex], newArray[randomIndex]] = [newArray[randomIndex], newArray[currentIndex]];
+  }
+  return newArray;
+}
+
+const containerVariants = {
+  animate: { transition: { staggerChildren: 0.15 } },
+  exit: { transition: { staggerChildren: 0.1, staggerDirection: -1 } }
+};
+
+const itemVariants = {
+  initial: { opacity: 0, y: 50 },
+  animate: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.25, 1, 0.5, 1] } },
+  exit: { opacity: 0, transition: { duration: 0.5, ease: "easeIn" } }
+};
+
+
+// --- Composant "GalleryItem" (Légèrement modifié pour accepter n'importe quel enfant) ---
+function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColor, children }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x, { stiffness: 100, damping: 30 });
@@ -49,46 +70,39 @@ function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColo
     onImageEnter();
     setBgColor(item.color);
   };
-  return (
-    <Link href={`/project/${item.id}`} className="block w-full h-full" >
-      <div className="relative w-full h-full" style={{ perspective: '1000px' }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter}>
-        <motion.div className="relative w-full rounded-xl shadow-xl bg-gray-900" style={{ rotateX, rotateY, transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}>
-          <motion.div transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} className="w-full h-auto overflow-hidden rounded-xl relative z-0 bg-gray-900" style={{ transform: "translateZ(0px)", backfaceVisibility: 'hidden' }}>
-            <motion.img src={item.imageUrl} alt={item.title} className="w-full h-full min-h-[150px] object-cover block pointer-events-none will-change-transform" />
-            <motion.div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-500" />
-          </motion.div>
-          <motion.div className="absolute inset-0 flex flex-col justify-end p-6 z-20" style={{ transform: "translateZ(40px)", pointerEvents: "none" }}>
-            <motion.h3 className="text-white text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">{item.title}</motion.h3>
-            <p className="text-gray-200 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out font-medium translate-y-4 group-hover:translate-y-0">Découvrir &rarr;</p>
-          </motion.div>
+
+  const content = (
+    <div className="relative w-full h-full" style={{ perspective: '1000px' }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter}>
+      <motion.div className="relative w-full rounded-xl shadow-xl bg-gray-900" style={{ rotateX, rotateY, transformStyle: 'preserve-d', backfaceVisibility: 'hidden' }}>
+        <motion.div transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} className="w-full h-auto overflow-hidden rounded-xl relative z-0 bg-gray-900" style={{ transform: "translateZ(0px)", backfaceVisibility: 'hidden' }}>
+          <motion.img src={item.imageUrl} alt={item.title} className="w-full h-full min-h-[150px] object-cover block pointer-events-none will-change-transform" />
+          <motion.div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-500" />
         </motion.div>
-      </div>
-    </Link>
+        <motion.div className="absolute inset-0 flex flex-col justify-end p-6 z-20" style={{ transform: "translateZ(40px)", pointerEvents: "none" }}>
+          <motion.h3 className="text-white text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">{item.title}</motion.h3>
+          <p className="text-gray-200 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out font-medium translate-y-4 group-hover:translate-y-0">Découvrir &rarr;</p>
+        </motion.div>
+      </motion.div>
+    </div>
   );
+
+  // --- LOGIQUE DE LIEN MODIFIÉE ---
+  // Si l'item a une URL, on utilise une balise <a>. Sinon, un Link Next.js.
+  return item.url
+    ? (
+        <a href={item.url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+          {content}
+        </a>
+      )
+    : (
+        <Link href={`/project/${item.id}`} className="block w-full h-full">
+          {content}
+        </Link>
+      );
 }
 
-// --- Utils & Variants (Inchangés) ---
-function shuffle(array) {
-  let currentIndex = array.length,  randomIndex;
-  const newArray = [...array]; 
-  while (currentIndex != 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [newArray[currentIndex], newArray[randomIndex]] = [newArray[randomIndex], newArray[currentIndex]];
-  }
-  return newArray;
-}
-const containerVariants = {
-  animate: { transition: { staggerChildren: 0.15 } },
-  exit: { transition: { staggerChildren: 0.1, staggerDirection: -1 } }
-};
-const itemVariants = {
-  initial: { opacity: 0, y: 50 },
-  animate: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.25, 1, 0.5, 1] } },
-  exit: { opacity: 0, transition: { duration: 0.5, ease: "easeIn" } }
-};
 
-// --- Composant Principal ---
+// --- Composant Principal (Seule la boucle .map est modifiée) ---
 export default function HomeGallery({ onImageEnter, onImageLeave }) {
   const defaultColor = '#f9fafb'; 
   const [bgColor, setBgColor] = useState(defaultColor);
