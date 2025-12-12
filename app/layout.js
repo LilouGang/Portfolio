@@ -18,18 +18,13 @@ export const metadata = {
     follow: true,
   },
 
-  // --- C'EST ICI QUE TU RÈGLES TON FAVICON ---
   icons: {
-    // Le chemin part du dossier 'public'.
-    // Donc si ton image est dans public/images/favicon.png :
     icon: '/images/favicon.png', 
   },
-  // -------------------------------------------
 
   openGraph: {
     title: 'Killian Lacaque | Développeur & Explorateur',
     description: 'Curieux de nature, fasciné par le fonctionnement du monde.',
-    // Attention : Tu avais mis "https://" en double, j'ai corrigé :
     url: 'https://killianlacaque.vercel.app/', 
     siteName: 'Killian Lacaque',
     locale: 'fr_FR',
