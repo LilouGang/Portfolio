@@ -1,4 +1,3 @@
-// Fichier : app/project/[id]/iceland/components/Lightbox.js
 "use client";
 import React, { useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';

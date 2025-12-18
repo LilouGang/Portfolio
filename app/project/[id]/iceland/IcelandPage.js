@@ -1,11 +1,8 @@
-// Fichier : app/project/[id]/iceland/IcelandPage.js (L'Assembleur Final)
 "use client";
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { icelandData } from '@/lib/icelandData';
-
-// --- Import de TOUS nos composants bien rangés ---
 import Cursor from './components/Cursor';
 import IcelandHeader from './components/IcelandHeader';
 import AnimatedStat from './components/AnimatedStat';
@@ -22,7 +19,6 @@ export default function IcelandPage({ project }) {
     offset: ["start start", "end end"]
   });
 
-  // --- Logique d'état au plus haut niveau ---
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -46,10 +42,8 @@ export default function IcelandPage({ project }) {
   }, []);
 
   useEffect(() => {
-    // Supprimé car le scroll est géré par le Link sur la page d'accueil
   }, []);
 
-  // --- Animations du Hero ---
   const heroImageY = useTransform(scrollYProgress, [0, 0.2], ["0%", "-20%"]);
   const heroTitleY = useTransform(scrollYProgress, [0, 0.2], ["0%", "-500%"]);
   const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
@@ -60,7 +54,6 @@ export default function IcelandPage({ project }) {
       <Cursor mousePosition={mousePosition} cursorVariant={cursorVariant} />
       <IcelandHeader />
 
-      {/* --- Section 1: HERO --- */}
       <section className="relative h-screen w-full">
         <div className="sticky top-0 h-full w-full overflow-hidden">
           <motion.div 
@@ -85,7 +78,6 @@ export default function IcelandPage({ project }) {
         </div>
       </section>
 
-      {/* --- Section 2: STATS --- */}
       <section className="relative py-32 px-6 bg-white z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
           {icelandData.stats.map((stat, i) => (
@@ -94,7 +86,6 @@ export default function IcelandPage({ project }) {
         </div>
       </section>
       
-      {/* --- Section 3: CARTE --- */}
       <section className="h-auto w-full flex flex-col items-center justify-center bg-white py-20">
         <h2 className="text-3xl md:text-5xl [font-family:'Boldonse',serif] mb-12 text-center px-4">
           Expédition
@@ -104,7 +95,6 @@ export default function IcelandPage({ project }) {
         </div>
       </section>
 
-      {/* --- Section 4: GALERIE --- */}
       <section className="relative bg-white py-20 px-8 z-10">
         <div className="max-w-7xl mx-auto mb-16 text-center">
           <motion.h2
@@ -124,14 +114,12 @@ export default function IcelandPage({ project }) {
         </div>
       </section>
 
-      {/* --- Section 5: VIDÉO --- */}
       <section className="relative bg-white py-20 px-8">
         <VideoCta videoUrl={icelandData.videoUrl} />
       </section>
       
       <IcelandFooter />
 
-      {/* --- LIGHTBOX --- */}
       <AnimatePresence>
         {lightboxOpen && (
           <Lightbox

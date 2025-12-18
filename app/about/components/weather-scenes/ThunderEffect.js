@@ -1,14 +1,11 @@
-// Fichier : app/about/components/weather-scenes/ThunderEffect.js
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import RainEffect from './RainEffect';
 
 export default function ThunderEffect() {
-  // On stocke un objet avec la position ET l'index du tracé
-  const [activeBolt, setActiveBolt] = useState(null); // { pos: 'left'|'center'|'right', pathIndex: 0 }
+  const [activeBolt, setActiveBolt] = useState(null);
 
-  // --- BANQUE DE TRACÉS SVG RÉALISTES (Inchangée) ---
   const BOLT_PATHS = useMemo(() => [
     "M50,-10 L48,15 L52,25 L49,40 L55,55 L45,90 L60,105 L50,140 L55,160 L45,210",
     "M50,-10 L55,30 L45,60 L50,100 L40,150 L60,200 M50,100 L70,120", 
@@ -23,7 +20,6 @@ export default function ThunderEffect() {
 
     setActiveBolt({ pos: randomPos, pathIndex: randomPath });
 
-    // Durée très courte (flash rétinien)
     setTimeout(() => {
       setActiveBolt(null);
     }, 200); 
@@ -32,7 +28,6 @@ export default function ThunderEffect() {
   useEffect(() => {
     let timeout;
     const loop = () => {
-      // Délai aléatoire entre orages (3s à 7s)
       const randomDelay = Math.random() * 2000 + 2000;
       timeout = setTimeout(() => {
         triggerLightning();
@@ -47,7 +42,6 @@ export default function ThunderEffect() {
     <>
       <RainEffect />
       
-      {/* Fond sombre pour le contraste (plus subtil) */}
       <div className="absolute inset-0 bg-slate-900/15 pointer-events-none" />
 
       <AnimatePresence>
@@ -60,12 +54,9 @@ export default function ThunderEffect() {
               preserveAspectRatio="none"
               className="absolute top-[-10%] w-full h-[120%]"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 0, 0.8, 0] }} // Double flash rapide
+              animate={{ opacity: [0, 1, 0, 0.8, 0] }}
               transition={{ duration: 0.25 }}
             >
-              {/* Le tracé est récupéré aléatoirement depuis la banque */}
-              
-              {/* COUCHE 1 : Halo atmosphérique (Inchangé) */}
               <path
                 d={BOLT_PATHS[activeBolt.pathIndex]}
                 fill="none"
@@ -76,23 +67,21 @@ export default function ThunderEffect() {
                 style={{ filter: 'blur(12px)', opacity: 0.4 }} 
               />
               
-              {/* COUCHE 2 : Halo blanc (Glow proche) - Légèrement affiné aussi */}
               <path
                 d={BOLT_PATHS[activeBolt.pathIndex]}
                 fill="none"
                 stroke="#a5b4fc"
-                strokeWidth="3" // Passé de 4 à 3 pour accompagner le cœur plus fin
+                strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 style={{ filter: 'blur(2px)', opacity: 0.8 }}
               />
 
-              {/* COUCHE 3 : Le Cœur (Filament d'énergie pure) - MODIFIÉ ICI */}
               <path
                 d={BOLT_PATHS[activeBolt.pathIndex]}
                 fill="none"
                 stroke="white"
-                strokeWidth="0.6" // <--- C'est ici : beaucoup plus fin (avant c'était "1")
+                strokeWidth="0.6"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -101,7 +90,6 @@ export default function ThunderEffect() {
         )}
       </AnimatePresence>
 
-      {/* FLASH GLOBAL (Inchangé) */}
       <motion.div 
         className="absolute inset-0 bg-indigo-50 z-30 pointer-events-none mix-blend-overlay"
         initial={{ opacity: 0 }}

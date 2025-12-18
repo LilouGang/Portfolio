@@ -1,4 +1,3 @@
-// components/pages/home/HomeIntro.js
 "use client";
 
 import { motion } from 'framer-motion';
@@ -30,7 +29,6 @@ const wordVariant = {
 
 export default function HomeIntro() {
   return (
-    // *** CHANGEMENT ICI : Ajout de pb-16 ***
     <section className="bg-gray-50 pt-20 md:pt-70 px-4 md:px-8 pb-60">
       <motion.p
         className="max-w-3xl mx-auto text-center text-xl md:text-2xl text-gray-700 leading-relaxed [font-family:'Lato',sans-serif]"

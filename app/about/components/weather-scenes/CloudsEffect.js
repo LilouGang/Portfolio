@@ -6,11 +6,10 @@ export default function CloudsEffect({ isDark = false }) {
   const [clouds, setClouds] = useState([]);
 
   useEffect(() => {
-    // Configuration des couches (Vitesse augmentée : durées réduites)
     const layers = [
-      { count: 2, speed: 50, scale: { min: 0.4, max: 0.6 }, opacity: 0.3, zIndex: 0, blur: 'blur-xl' }, // Fond (Lent)
-      { count: 2, speed: 40, scale: { min: 0.8, max: 1.0 }, opacity: 0.5, zIndex: 10, blur: 'blur-lg' }, // Milieu
-      { count: 1, speed: 30, scale: { min: 1.2, max: 1.5 }, opacity: 0.7, zIndex: 20, blur: 'blur-md' }, // Devant (Rapide)
+      { count: 2, speed: 50, scale: { min: 0.4, max: 0.6 }, opacity: 0.3, zIndex: 0, blur: 'blur-xl' },
+      { count: 2, speed: 40, scale: { min: 0.8, max: 1.0 }, opacity: 0.5, zIndex: 10, blur: 'blur-lg' },
+      { count: 1, speed: 30, scale: { min: 1.2, max: 1.5 }, opacity: 0.7, zIndex: 20, blur: 'blur-md' },
     ];
 
     const generatedClouds = [];
@@ -18,18 +17,14 @@ export default function CloudsEffect({ isDark = false }) {
 
     layers.forEach((layer) => {
       for (let i = 0; i < layer.count; i++) {
-        // Calcul de la durée spécifique pour ce nuage
         const duration = layer.speed + Math.random() * 10;
         
         generatedClouds.push({
           id: idCounter++,
-          y: Math.random() * 70 + 5, // Position verticale un peu plus étalée
+          y: Math.random() * 70 + 5,
           scale: layer.scale.min + Math.random() * (layer.scale.max - layer.scale.min),
           opacity: layer.opacity,
           duration: duration,
-          // ASTUCE : Délai NÉGATIF aléatoire basé sur la durée.
-          // Cela force l'animation à démarrer "au milieu" de son cycle.
-          // Résultat : les nuages sont déjà dispersés sur l'écran au chargement.
           delay: -Math.random() * duration, 
           zIndex: layer.zIndex,
           blur: layer.blur,
@@ -52,21 +47,19 @@ export default function CloudsEffect({ isDark = false }) {
       {clouds.map((cloud) => (
         <motion.div
           key={cloud.id}
-          // DÉPART : Hors champ à droite
           initial={{ x: "350%" }} 
-          // ARRIVÉE : Hors champ à gauche
           animate={{ x: "-150%" }} 
           transition={{ 
             duration: cloud.duration, 
             repeat: Infinity, 
             ease: "linear",
-            delay: cloud.delay // Le délai négatif place le nuage immédiatement quelque part sur le trajet
+            delay: cloud.delay
           }}
           style={{ 
             top: `${cloud.y}%`,
             zIndex: cloud.zIndex,
             width: cloud.width,
-            height: cloud.width * 0.45, // Forme légèrement plus arrondie
+            height: cloud.width * 0.45,
           }}
           className={`absolute rounded-full ${cloudColor} ${cloud.blur}`}
         >

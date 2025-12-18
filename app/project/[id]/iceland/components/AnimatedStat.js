@@ -1,4 +1,3 @@
-// Fichier : app/project/[id]/iceland/components/AnimatedStat.js
 "use client";
 import React, { useRef, useEffect } from 'react';
 import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';

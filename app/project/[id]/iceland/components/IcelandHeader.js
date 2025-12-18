@@ -1,4 +1,3 @@
-// Fichier : app/project/[id]/iceland/components/IcelandHeader.js
 "use client";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,7 +32,6 @@ export default function IcelandHeader() {
               fill="none" stroke="currentColor" strokeWidth="2" 
               className="m-2 box-content"
             >
-              {/* --- PATH RESTAURÉ --- */}
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
           </motion.div>

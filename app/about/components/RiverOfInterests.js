@@ -9,7 +9,6 @@ const interests = [
   "Cosmologie", "Peinture", "Sport", "Trekking", "Jeux de Société", 
 ];
 
-// Fonction pour mélanger (Fisher-Yates)
 const shuffle = (array) => {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -19,12 +18,10 @@ const shuffle = (array) => {
   return newArray;
 };
 
-// Composant pour une ligne de défilement
 const MarqueeLine = ({ items, direction = "left", speed = 20 }) => {
   return (
     <div className="flex overflow-hidden relative w-full group/line py-2">
       <motion.div
-        // CORRECTION 1 : On enlève le gap-8 ici pour éviter le saut
         className="flex whitespace-nowrap"
         animate={{
           x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"],
@@ -36,7 +33,6 @@ const MarqueeLine = ({ items, direction = "left", speed = 20 }) => {
         }}
         style={{ animationPlayState: "running" }}
       >
-        {/* On double la liste pour créer une boucle infinie */}
         {[...items, ...items].map((item, idx) => (
           <span
             key={`${item}-${idx}`}
@@ -67,7 +63,6 @@ export default function RiverOfInterests({ variants }) {
   return (
     <motion.div 
       variants={variants}
-      // CORRECTION 2 : Fond bg-white/40 (comme les autres cartes) au lieu de bg-white/80
       className="md:col-span-4 bg-white/60 backdrop-blur-xl border border-white/20 p-6 rounded-3xl shadow-sm relative overflow-hidden h-64 flex flex-col justify-center gap-4 group"
     >
       
@@ -87,7 +82,6 @@ export default function RiverOfInterests({ variants }) {
         </>
       )}
 
-      {/* Titre discret */}
       <div className="absolute bottom-3 right-5 pointer-events-none">
         <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-600">Rivière d'intérêts</span>
       </div>

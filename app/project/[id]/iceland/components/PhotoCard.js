@@ -1,4 +1,3 @@
-// Fichier : app/project/[id]/iceland/components/PhotoCard.js
 "use client";
 import { motion } from 'framer-motion';
     

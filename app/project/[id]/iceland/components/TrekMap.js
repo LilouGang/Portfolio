@@ -1,25 +1,17 @@
-// Fichier : app/project/[id]/iceland/components/TrekMap.js (Version Finale et Robuste avec useTransform)
 "use client";
 
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { icelandData } from '@/lib/icelandData';
 import { useEffect } from 'react';
-
-// ================================================================================= //
-// SOUS-COMPOSANT : TrekPoint (Version déclarative)
-// ================================================================================= //
 function TrekPoint({ step, index, total, progress }) {
   if (!step.coords) return null;
 
   const activationProgress = index / (total - 1);
 
-  // --- LA BONNE SOLUTION EST ICI ---
-  // On crée une MotionValue de couleur qui est synchronisée avec la progression.
   const pointColor = useTransform(
     progress,
-    // La couleur passe de l'un à l'autre juste au point d'activation
     [activationProgress - 0.001, activationProgress],
-    ["rgba(255, 255, 255, 0.5)", "#ff6961"] // Couleur inactive -> Couleur active
+    ["rgba(255, 255, 255, 0.5)", "#ff6961"]
   );
 
   return (
@@ -27,17 +19,12 @@ function TrekPoint({ step, index, total, progress }) {
       <motion.circle
         r="0.45"
         stroke="none"
-        // On applique la couleur directement via le style.
         style={{ fill: pointColor }}
       />
     </g>
   );
 }
 
-
-// ================================================================================= //
-// LOGIQUE DE LA CARTE PRINCIPALE (Inchangée)
-// ================================================================================= //
 const pathD = icelandData.timeline.map((point, index) => {
   if (!point.coords) return '';
   const command = (index === 0) ? 'M' : 'L';

@@ -1,4 +1,3 @@
-// Fichier : app/about/components/QuoteCard.js (Option 2: Crépuscule Alpin)
 "use client";
 import { motion } from 'framer-motion';
 import { Quote } from 'lucide-react';
@@ -7,13 +6,10 @@ export default function QuoteCard({ variants }) {
   return (
     <motion.div 
       variants={variants}
-      // --- NOUVEAU DÉGRADÉ ---
       className="md:col-span-2 bg-gradient-to-br from-yellow-100/30 to-blue-200/40 backdrop-blur-xl border border-white/20 p-6 rounded-3xl relative overflow-hidden flex flex-col justify-center text-center shadow-2xl"
     >
-      {/* Icône adaptée */}
       <Quote className="absolute top-4 left-4 text-indigo-900/20 w-8 h-8" />
       <div className="relative z-10 flex flex-col items-center justify-center h-full">
-        {/* Texte adapté */}
         <p className="font-serif font-medium text-xl text-indigo-950 leading-relaxed italic">
           « L'œuvre d'art naît du renoncement de l'intelligence à raisonner le concret. »
         </p>

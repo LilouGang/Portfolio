@@ -1,6 +1,6 @@
 "use client";
 
-import Link from 'next/link'; // 1. Importer Link
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 const MotionLink = motion(Link);

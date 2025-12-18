@@ -2,13 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-// import Link from 'next/link'; // Remplacé par une balise <a> standard pour la compatibilité
 import { ArrowLeft, Send, Check, Linkedin, Instagram, Github, ArrowUpRight, Smile } from 'lucide-react';
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState('idle');
 
-  // Fonction d'envoi via FormSubmit (AVEC TA CLÉ SÉCURISÉE)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus('submitting');
@@ -16,7 +14,6 @@ export default function ContactPage() {
     const formData = new FormData(e.target);
 
     try {
-      // J'ai remplacé ton email par le code sécurisé que tu as reçu
       const response = await fetch("https://formsubmit.co/ajax/a1f3094ee4b612d1bbd89bfce7ac9082", {
         method: "POST",
         body: formData
@@ -24,7 +21,7 @@ export default function ContactPage() {
 
       if (response.ok) {
         setFormStatus('success');
-        e.target.reset(); // Vide le formulaire
+        e.target.reset();
         setTimeout(() => setFormStatus('idle'), 3000);
       } else {
         console.error("Erreur lors de l'envoi");
@@ -38,7 +35,6 @@ export default function ContactPage() {
     }
   };
 
-  // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.95 },
     visible: { 
@@ -55,12 +51,9 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-[#F5F5F7] text-neutral-900 flex items-center justify-center p-4 md:p-8 relative overflow-hidden font-sans">
-      
-      {/* === FOND TEXTURÉ ET ANIMÉ === */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-30"></div>
         
-        {/* BLOB 1 : BLEU */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ 
@@ -73,7 +66,6 @@ export default function ContactPage() {
           className="absolute top-[-10%] left-[-10%] h-[300px] w-[300px] md:h-[500px] md:w-[500px] rounded-full bg-blue-500/40 blur-[90px]" 
         />
 
-         {/* BLOB 2 : VIOLET */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ 
@@ -87,8 +79,6 @@ export default function ContactPage() {
         />
       </div>
 
-
-      {/* BOUTON RETOUR */}
       <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="absolute top-6 left-6 z-50">
         <a href="/" className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-neutral-200 hover:shadow-md hover:-translate-y-0.5 transition-all group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
@@ -96,10 +86,8 @@ export default function ContactPage() {
         </a>
       </motion.div>
 
-      {/* CONTENEUR PRINCIPAL */}
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6 z-10">
         
-        {/* GAUCHE */}
         <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col gap-6">
           <div className="bg-white rounded-[2rem] p-8 shadow-xl shadow-neutral-200/50 border border-white flex flex-col justify-between h-full min-h-[280px] relative overflow-hidden group">
              <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-200 rounded-full blur-[60px] opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
@@ -115,22 +103,18 @@ export default function ContactPage() {
              </div>
           </div>
 
-          {/* GRILLE RÉSEAUX SOCIAUX - MODIFIÉE POUR 3 COLONNES */}
           <div className="grid grid-cols-3 gap-3">
             
-            {/* LinkedIn */}
             <a href="https://www.linkedin.com/in/killian-lacaque/" target="_blank" className="bg-white px-4 py-5 rounded-[1.5rem] shadow-lg shadow-neutral-200/40 border border-white hover:border-blue-200 hover:shadow-blue-100 transition-all group cursor-pointer flex flex-col justify-between h-32">
                <div className="flex justify-between items-start"><Linkedin size={24} className="text-neutral-900 group-hover:text-blue-600 transition-colors" /><ArrowUpRight size={16} className="opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all text-neutral-400" /></div>
                <span className="font-bold text-xs md:text-sm mt-auto">LinkedIn</span>
             </a>
 
-            {/* Instagram */}
             <a href="https://www.instagram.com/killian.lcq_/" target="_blank" className="bg-white px-4 py-5 rounded-[1.5rem] shadow-lg shadow-neutral-200/40 border border-white hover:border-pink-200 hover:shadow-pink-100 transition-all group cursor-pointer flex flex-col justify-between h-32">
                <div className="flex justify-between items-start"><Instagram size={24} className="text-neutral-900 group-hover:text-pink-500 transition-colors" /><ArrowUpRight size={16} className="opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all text-neutral-400" /></div>
                <span className="font-bold text-xs md:text-sm mt-auto">Instagram</span>
             </a>
 
-            {/* GitHub - Standardisé avec les autres */}
             <a href="https://github.com/LilouGang" target="_blank" className="bg-white px-4 py-5 rounded-[1.5rem] shadow-lg shadow-neutral-200/40 border border-white hover:border-neutral-400 hover:shadow-neutral-200 transition-all group cursor-pointer flex flex-col justify-between h-32">
                <div className="flex justify-between items-start"><Github size={24} className="text-neutral-900 group-hover:text-orange-600 transition-colors" /><ArrowUpRight size={16} className="opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all text-neutral-400" /></div>
                <span className="font-bold text-xs md:text-sm mt-auto">GitHub</span>
@@ -138,13 +122,11 @@ export default function ContactPage() {
 
           </div>
         </motion.div>
-
-        {/* DROITE : FORMULAIRE */}
+        
         <motion.div variants={itemVariants} className="lg:col-span-7 bg-white rounded-[2rem] p-8 md:p-12 shadow-xl shadow-neutral-200/50 border border-white relative">
           
           <form onSubmit={handleSubmit} className="space-y-6">
             
-            {/* CONFIGURATION DU MAIL */}
             <input type="hidden" name="_subject" value="Nouveau message Portfolio !" />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="table" />

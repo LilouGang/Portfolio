@@ -3,8 +3,6 @@
 import React, { use } from 'react';
 import Link from 'next/link';
 import { galleryItems } from '@/lib/data';
-
-// --- Le Catalogue des Mises en Page ---
 import IcelandPage from './iceland/IcelandPage';
 
 export default function ProjectPage({ params: paramsPromise }) {
@@ -12,22 +10,18 @@ export default function ProjectPage({ params: paramsPromise }) {
   const { id } = params;
   const project = galleryItems.find((item) => item.id === parseInt(id));
 
-  // Étape 1 : Vérifier si le projet existe dans les données
   if (!project) {
     return <ProjectNotFound />;
   }
 
-  // --- Étape 2 : L'Aiguillage Intelligent ---
   switch (project.id) {
-    case 1: // ID de l'Islande
+    case 1:
       return <IcelandPage project={project} />;
     default:
       return <ProjectPageNotAvailable project={project} />;
   }
 }
 
-
-// --- Composants d'aide pour les cas d'erreur ---
 function ProjectNotFound() {
   return (
     <div className="flex flex-col items-center justify-center h-screen text-white bg-black">

@@ -1,4 +1,3 @@
-// Fichier : app/about/components/WeatherCard.js (Version Améliorée)
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -13,15 +12,12 @@ export default function WeatherCard() {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // La fonction getWeatherVisuals ne change pas
   const getWeatherVisuals = (conditionId) => {
     const id = conditionId || 800;
-    // J'ai rendu le ciel "pluie/orage" un peu plus sombre pour l'effet.
     if (id >= 200 && id < 300) return { bg: "bg-gradient-to-br from-gray-900 via-slate-800 to-indigo-950", scene: <ThunderEffect />, textColor: "text-white" };
     if ((id >= 300 && id < 400) || (id >= 500 && id < 600)) return { bg: "bg-gradient-to-br from-slate-700 to-sky-900", scene: <RainEffect />, textColor: "text-blue-50" };
     if (id >= 600 && id < 700) return { bg: "bg-gradient-to-br from-blue-200 to-slate-200", scene: <SnowEffect />, textColor: "text-sky-800" };
     if (id >= 700 && id < 800) return { bg: "bg-gradient-to-br from-slate-200 to-slate-400", scene: <CloudsEffect isDark={true} />, textColor: "text-gray-700" };
-    // Le SunEffect que vous avez amélioré est dans ce background
     if (id === 800) return { bg: "bg-gradient-to-br from-blue-300 to-sky-400", scene: <SunEffect />, textColor: "text-white" };
     return { bg: "bg-gradient-to-br from-blue-400 to-sky-200", scene: <CloudsEffect />, textColor: "text-white" };
   };
@@ -46,11 +42,7 @@ export default function WeatherCard() {
     const fetchWeather = async (lat, lon) => {
       setLoading(true);
       try {
-        // ... (Logique API non modifiée)
         const API_KEY = "2d60b7baaada43f03ef7517be63e4af6"; 
-        
-        // --- POUR TESTER LE FALLBACK : Décommentez la ligne ci-dessous pour forcer une erreur API ---
-        // throw new Error("Test Fallback API"); 
 
         const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=fr&appid=${API_KEY}`);
         
@@ -97,7 +89,6 @@ export default function WeatherCard() {
 
   const visuals = getWeatherVisuals(weather?.id);
 
-  // Style CSS personnalisé pour une meilleure ombre portée sur le texte
   const textShadowStyle = {
     textShadow: '0 2px 4px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.1)',
   };
@@ -105,7 +96,6 @@ export default function WeatherCard() {
   return (
     <div className={`h-full w-full relative overflow-hidden transition-all duration-1000 rounded-xl ${loading ? 'bg-slate-200' : visuals.bg}`}>
       
-      {/* Rendre le conteneur du fond légèrement plus sombre pour faire ressortir les scènes de jour */}
       <div className="absolute inset-0 z-0">
           {!loading && visuals.scene}
       </div>
@@ -120,38 +110,29 @@ export default function WeatherCard() {
           </div>
         ) : (
           <>
-             {/* Header */}
              <div className="flex justify-between items-start">
                 <div className="flex-1 min-w-0 pr-4">
-                   {/* Applique le style d'ombre portée pour améliorer la lisibilité */}
                    <h3 className="text-2xl font-bold flex items-center gap-2" style={textShadowStyle}>
                      <span className="truncate">{weather.city}</span>
                      {weather.isFallback && <MapPin size={14} className="opacity-50 flex-shrink-0" />}
                    </h3>
-                   {/* Applique le style d'ombre portée pour améliorer la lisibilité */}
                    <p className="text-base font-medium opacity-90 truncate" style={textShadowStyle}>{weather.desc}</p>
                 </div>
-                {/* Température : taille inchangée, mais une ombre plus forte pour la lisibilité */}
                 <div className="text-6xl font-thin tracking-tighter leading-none" style={textShadowStyle}>
                   {weather.temp}°
                 </div>
              </div>
 
-             {/* --- FOOTER DÉTAILS --- */}
              <div className="grid grid-cols-3 gap-2 pt-4 mt-auto">
                 
-                {/* 1. Humidité (Gauche) */}
                 <div className="flex flex-col col-span-1 items-start">
-                   {/* Rendu plus petit et plus transparent pour les détails subtils */}
                    <span className="text-[10px] uppercase tracking-wider opacity-60 mb-1 flex items-center gap-1 font-medium" style={textShadowStyle}>
                       <Droplets size={12} /> Humidité
                    </span>
                    <span className="font-semibold text-base" style={textShadowStyle}>{weather.humidity}%</span>
                 </div>
 
-                {/* 2. Température Min/Max (Centre) */}
                 <div className="flex flex-col col-span-1 items-center">
-                   {/* Rendu plus petit et plus transparent pour les détails subtils */}
                    <span className="text-[10px] uppercase tracking-wider opacity-60 mb-1 flex items-center gap-1 font-medium" style={textShadowStyle}>
                       <Thermometer size={12} /> Temp.
                    </span>
@@ -162,9 +143,7 @@ export default function WeatherCard() {
                    </span>
                 </div>
 
-                {/* 3. Vent (Droite) */}
                 <div className="flex flex-col col-span-1 items-end">
-                   {/* Rendu plus petit et plus transparent pour les détails subtils */}
                    <span className="text-[10px] uppercase tracking-wider opacity-60 mb-1 flex items-center gap-1 font-medium" style={textShadowStyle}>
                       <Wind size={12} /> Vent
                    </span>

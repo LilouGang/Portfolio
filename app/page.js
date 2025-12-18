@@ -1,9 +1,7 @@
-// Fichier : app/page.js
 "use client";
 
 import React, { useState, useEffect } from 'react';
 
-// Importation des nouveaux composants
 import HomeHeader from '@/components/pages/home/HomeHeader';
 import HomeFooter from '@/components/pages/home/HomeFooter';
 import HomeCursor from '@/components/pages/home/HomeCursor';
@@ -33,13 +31,13 @@ export default function HomePage() {
   
   return (
     <main className="font-sans antialiased overflow-x-hidden">
-      <HomeHeader /> {/* Header ajouté ici */}
+      <HomeHeader />
       <HomeCursor mousePosition={mousePosition} cursorVariant={cursorVariant} />
       <HomeHero onMouseEnter={textEnter} onMouseLeave={textLeave} />
       <HomeIntro />
       <HomeGallery onImageEnter={imageEnter} onImageLeave={imageLeave} />
       <HomeNavigation onMouseEnter={textEnter} onMouseLeave={textLeave} />
-      <HomeFooter /> {/* Footer ajouté ici */}
+      <HomeFooter />
     </main>
   );
 }

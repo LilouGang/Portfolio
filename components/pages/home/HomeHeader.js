@@ -1,4 +1,3 @@
-// Fichier : components/pages/home/HomeHeader.js
 "use client";
 
 import React, { useState } from 'react';
@@ -37,7 +36,6 @@ export default function HomeHeader() {
     }
   };
 
-  // --- MODIFICATION ICI ---
   const navLinks = [
     { name: "À Propos", href: "/about" },
     { name: "Contact", href: "/contact" },

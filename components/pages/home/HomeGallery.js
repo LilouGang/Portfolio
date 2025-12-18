@@ -5,10 +5,8 @@ import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from
 import { galleryItems } from '@/lib/data';
 import Link from 'next/link';
 
-// --- CONSTANTE DE SYNCHRONISATION ---
 const colorTransition = { duration: 0.8, ease: "easeInOut" };
 
-// --- Fonctions utilitaires & Variants (Inchangés) ---
 function getContrastingTextColor(hexColor) {
   if (!hexColor) return '#111827'; 
   const r = parseInt(hexColor.substr(1, 2), 16);
@@ -40,8 +38,6 @@ const itemVariants = {
   exit: { opacity: 0, transition: { duration: 0.5, ease: "easeIn" } }
 };
 
-
-// --- Composant "GalleryItem" (Légèrement modifié pour accepter n'importe quel enfant) ---
 function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColor, children }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -86,8 +82,6 @@ function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColo
     </div>
   );
 
-  // --- LOGIQUE DE LIEN MODIFIÉE ---
-  // Si l'item a une URL, on utilise une balise <a>. Sinon, un Link Next.js.
   return item.url
     ? (
         <a href={item.url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
@@ -101,8 +95,6 @@ function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColo
       );
 }
 
-
-// --- Composant Principal (Seule la boucle .map est modifiée) ---
 export default function HomeGallery({ onImageEnter, onImageLeave }) {
   const defaultColor = '#f9fafb'; 
   const [bgColor, setBgColor] = useState(defaultColor);
@@ -139,23 +131,19 @@ export default function HomeGallery({ onImageEnter, onImageLeave }) {
   return (
     <motion.section 
       className="relative z-10 pt-16 md:pt-20 pb-20 md:pb-32 px-4 md:px-8 text-gray-900"
-      // 1. APPLICATION AU FOND
       animate={{ backgroundColor: bgColor }}
       transition={colorTransition} 
     >
       <div className="max-w-7xl mx-auto">
         
-        {/* --- TITRE --- */}
         <motion.h2
           className="text-center text-4xl md:text-5xl font-bold mb-12 md:mb-16 [font-family:'Boldonse',serif]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           
-          // 2. APPLICATION AU TITRE (Couleur)
           animate={{ 
             color: textColor,
-            // On s'assure que l'animation d'apparition reste active si elle joue encore
             opacity: 1, 
             y: 0 
           }}
@@ -164,7 +152,6 @@ export default function HomeGallery({ onImageEnter, onImageLeave }) {
           Créations
         </motion.h2>
         
-        {/* --- BOUTONS --- */}
         <div className="flex justify-center mb-12 md:mb-16">
           <div className="flex bg-white/30 backdrop-blur-md rounded-full p-0 shadow-sm">
             {[{ label: 'Tout', value: 'tout' }, 
@@ -185,10 +172,8 @@ export default function HomeGallery({ onImageEnter, onImageLeave }) {
                     <motion.span
                       layoutId="activeFilter"
                       className="absolute inset-0 rounded-full z-0" 
-                      // 3. APPLICATION A LA PILULE (Fond)
                       animate={{ backgroundColor: textColor }}
                       transition={{
-                        // On mélange la transition de couleur ET le ressort du mouvement
                         backgroundColor: colorTransition,
                         layout: { type: "spring", stiffness: 300, damping: 30 }
                       }}
@@ -197,7 +182,6 @@ export default function HomeGallery({ onImageEnter, onImageLeave }) {
                   
                   <motion.span 
                     className="relative z-10"
-                    // 4. APPLICATION AU TEXTE DU BOUTON (Couleur)
                     animate={{ 
                       color: isActive ? activePillText : textColor 
                     }}
@@ -211,7 +195,6 @@ export default function HomeGallery({ onImageEnter, onImageLeave }) {
           </div>
         </div>
         
-        {/* ... (Reste du code de la grille inchangé) ... */}
         <motion.div
           animate={{ height }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}

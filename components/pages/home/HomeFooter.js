@@ -1,4 +1,3 @@
-// Fichier : components/pages/home/HomeFooter.js
 "use client";
 
 import React from 'react';
