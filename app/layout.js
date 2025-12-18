@@ -18,10 +18,6 @@ export const metadata = {
     follow: true,
   },
 
-  icons: {
-    icon: '/images/favicon.png', 
-  },
-
   openGraph: {
     title: 'Killian Lacaque | Développeur & Explorateur',
     description: 'Curieux de nature, fasciné par le fonctionnement du monde.',
