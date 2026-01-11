@@ -2,6 +2,8 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+export const dynamic = 'force-static';
+
 export const metadata = {
   title: 'Killian Lacaque | Portfolio',
   description: 'Portfolio de Killian Lacaque. Curieux et passionné par les sciences, le trekking et la nature.',
@@ -25,10 +27,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <head>
-        {/* Verification Google */}
         <meta name="google-site-verification" content="Y65NE1Berxi8y4Gcny87MqE1PKChyKA9Se47RSHBp7Y" />
 
-        {/* Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet" />
@@ -50,6 +50,26 @@ export default function RootLayout({ children }) {
                 "https://github.com/killianlacaque",
                 "https://linkedin.com/in/killianlacaque"
               ]
+            }),
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "url": "https://killianlacaque.vercel.app",
+              "name": "Killian Lacaque | Portfolio",
+              "publisher": {
+                "@type": "Person",
+                "name": "Killian Lacaque",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://killianlacaque.vercel.app/favicon.ico"
+                }
+              }
             }),
           }}
         />
