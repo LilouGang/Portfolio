@@ -17,7 +17,7 @@ export default function HomeHero({ onMouseEnter, onMouseLeave }) {
       <div className="absolute inset-0 bg-black/50" />
       <div className="relative z-10" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <motion.h1
-          className="text-5xl md:text-7xl lg:text-8xl font-bold [font-family:'Playfair_Display',serif]"
+          className="text-5xl md:text-7xl lg:text-8xl font-bold font-['Playfair_Display',serif]"
           initial={{ opacity: 0, filter: 'blur(10px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -25,7 +25,7 @@ export default function HomeHero({ onMouseEnter, onMouseLeave }) {
           {userName}
         </motion.h1>
         <motion.p
-          className="text-lg md:text-2xl mt-4 text-gray-150 max-w-2xl font-light [font-family:'Lato',serif] "
+          className="text-lg md:text-2xl mt-4 text-gray-150 max-w-2xl font-light font-['Lato',serif] "
           initial={{ opacity: 0, filter: 'blur(5px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
           transition={{ duration: 1.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}

@@ -137,7 +137,7 @@ export default function HomeGallery({ onImageEnter, onImageLeave }) {
       <div className="max-w-7xl mx-auto">
         
         <motion.h2
-          className="text-center text-4xl md:text-5xl font-bold mb-12 md:mb-16 [font-family:'Boldonse',serif]"
+          className="text-center text-4xl md:text-5xl font-bold mb-12 md:mb-16 font-['Boldonse',serif]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
