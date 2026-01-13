@@ -10,7 +10,7 @@ export default function PhotoCard({ variants }) {
       className="md:col-span-2 min-h-[250px] relative rounded-3xl overflow-hidden group shadow-2xl border border-white/20"
     >
       <Image 
-        src="/images/about/montagne.jpg"
+        src="/images/about/montagne1.jpg"
         alt="Montagne"
         fill
         className="object-cover transition-transform duration-1000 group-hover:scale-110 opacity-100"
