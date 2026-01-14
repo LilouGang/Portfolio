@@ -12,7 +12,7 @@ import VideoCta from './components/VideoCta';
 import IcelandFooter from './components/IcelandFooter';
 import Lightbox from './components/Lightbox';
 
-export default function IcelandPage({ passion }) {
+export default function IcelandPage({ project }) {
   const pageRef = useRef(null);
   const { scrollYProgress } = useScroll({ 
     target: pageRef,
@@ -57,12 +57,12 @@ export default function IcelandPage({ passion }) {
       <section className="relative h-screen w-full">
         <div className="sticky top-0 h-full w-full overflow-hidden">
           <motion.div 
-            layoutId={`card-container-${passion.id}`}
+            layoutId={`card-container-${project.id}`}
             className="absolute inset-0 w-full h-full"
             style={{ y: heroImageY }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img src={passion.imageUrl} className="w-full h-full object-cover" alt={passion.title} />
+            <img src={project.imageUrl} className="w-full h-full object-cover" alt={project.title} />
           </motion.div>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <motion.h1
