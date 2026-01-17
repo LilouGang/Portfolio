@@ -15,7 +15,7 @@ export const metadata = {
   },
   openGraph: {
     title: 'Killian Lacaque | Portfolio',
-    description: 'Curieux de nature, fasciné par le fonctionnement du monde.',
+    description: 'Curieux de nature. La découverte pour passion.',
     url: 'https://killianlacaque.vercel.app/',
     siteName: 'Killian Lacaque',
     locale: 'fr_FR',
