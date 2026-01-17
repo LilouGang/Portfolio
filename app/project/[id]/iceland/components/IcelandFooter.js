@@ -16,7 +16,7 @@ export default function IcelandFooter() {
     <footer className="relative z-10 w-full p-8 md:p-8 bg-black text-gray-400"> 
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-12">
-          <h3 className="text-3xl [font-family:'Boldonse',serif] text-white text-center md:text-left">
+          <h3 className="text-3xl font-['Boldonse',serif] text-white text-center md:text-left">
             Là où finit la route commence l’aventure.
           </h3>
           <div className="flex flex-col sm:flex-row gap-8 md:gap-8">
