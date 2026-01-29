@@ -38,61 +38,80 @@ const itemVariants = {
   exit: { opacity: 0, transition: { duration: 0.5, ease: "easeIn" } }
 };
 
-function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColor, children }) {
+function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColor }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x, { stiffness: 100, damping: 30 });
   const mouseYSpring = useSpring(y, { stiffness: 100, damping: 30 });
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = (mouseX / width) - 0.5;
-    const yPct = (mouseY / height) - 0.5;
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
     x.set(xPct);
     y.set(yPct);
   };
+
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
     onImageLeave();
     setBgColor(defaultColor);
   };
+
   const handleMouseEnter = () => {
     onImageEnter();
     setBgColor(item.color);
   };
 
   const content = (
-    <div className="relative w-full h-full" style={{ perspective: '1000px' }} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onMouseEnter={handleMouseEnter}>
-      <motion.div className="relative w-full rounded-xl shadow-xl bg-gray-900" style={{ rotateX, rotateY, transformStyle: 'preserve-d', backfaceVisibility: 'hidden' }}>
-        <motion.div transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} className="w-full h-auto overflow-hidden rounded-xl relative z-0 bg-gray-900" style={{ transform: "translateZ(0px)", backfaceVisibility: 'hidden' }}>
-          <motion.img src={item.imageUrl} alt={item.title} className="w-full h-full min-h-[150px] object-cover block pointer-events-none will-change-transform" />
-          <motion.div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-500" />
-        </motion.div>
-        <motion.div className="absolute inset-0 flex flex-col justify-end p-6 z-20" style={{ transform: "translateZ(40px)", pointerEvents: "none" }}>
-          <motion.h3 className="text-white text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">{item.title}</motion.h3>
-          <p className="text-gray-200 text-sm mt-2 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out font-medium translate-y-4 group-hover:translate-y-0">Découvrir &rarr;</p>
-        </motion.div>
+    <div 
+      className="relative w-full h-full group" 
+      style={{ perspective: '1000px' }} 
+      onMouseMove={handleMouseMove} 
+      onMouseLeave={handleMouseLeave} 
+      onMouseEnter={handleMouseEnter}
+    >
+      <motion.div 
+        className="relative w-full rounded-xl shadow-xl bg-gray-900 overflow-hidden" 
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+      >
+        {/* Conteneur Image */}
+        <div className="w-full h-auto overflow-hidden rounded-xl relative z-0">
+          <motion.img 
+            src={item.imageUrl} 
+            alt={item.title} 
+            className="w-full h-full min-h-[150px] object-cover block pointer-events-none transition-transform duration-700 group-hover:scale-105" 
+          />
+        </div>
+
+        {/* Overlay au survol (Texte sortant du bas) */}
+        <div className="absolute inset-x-0 bottom-0 z-20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
+          <div className="bg-black/80 backdrop-blur-md p-6 m-2 rounded-lg border border-white/10">
+            <h3 className="text-white font-bold text-lg mb-1">{item.title}</h3>
+            <p className="text-gray-200 text-sm leading-relaxed">
+              {item.description || "Cliquez pour découvrir ce projet en détail."}
+            </p>
+            <span className="inline-block mt-3 text-xs font-semibold uppercase tracking-wider text-blue-400">
+              Voir le projet &rarr;
+            </span>
+          </div>
+        </div>
       </motion.div>
     </div>
   );
 
-  return item.url
-    ? (
-        <a href={item.url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-          {content}
-        </a>
-      )
-    : (
-        <Link href={`/project/${item.id}`} className="block w-full h-full">
-          {content}
-        </Link>
-      );
+  return item.url ? (
+    <a href={item.url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+      {content}
+    </a>
+  ) : (
+    <Link href={`/project/${item.id}`} className="block w-full h-full">
+      {content}
+    </Link>
+  );
 }
 
 export default function HomeGallery({ onImageEnter, onImageLeave }) {
