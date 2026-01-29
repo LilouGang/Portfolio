@@ -41,6 +41,7 @@ const itemVariants = {
 function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColor }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  
   const mouseXSpring = useSpring(x, { stiffness: 100, damping: 30 });
   const mouseYSpring = useSpring(y, { stiffness: 100, damping: 30 });
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
@@ -48,10 +49,8 @@ function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColo
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
   const handleMouseLeave = () => {
@@ -61,56 +60,47 @@ function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColo
     setBgColor(defaultColor);
   };
 
-  const handleMouseEnter = () => {
-    onImageEnter();
-    setBgColor(item.color);
-  };
-
   const content = (
     <div 
       className="relative w-full h-full group" 
       style={{ perspective: '1000px' }} 
       onMouseMove={handleMouseMove} 
       onMouseLeave={handleMouseLeave} 
-      onMouseEnter={handleMouseEnter}
+      onMouseEnter={() => { onImageEnter(); setBgColor(item.color); }}
     >
       <motion.div 
-        className="relative w-full rounded-xl shadow-xl bg-gray-900 overflow-hidden" 
+        className="relative w-full rounded-xl overflow-hidden shadow-xl border border-black/10" 
         style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
       >
-        {/* Conteneur Image */}
-        <div className="w-full h-auto overflow-hidden rounded-xl relative z-0">
+        <div className="w-full h-auto relative z-0">
           <motion.img 
             src={item.imageUrl} 
             alt={item.title} 
-            className="w-full h-full min-h-[150px] object-cover block pointer-events-none transition-transform duration-700 group-hover:scale-105" 
+            className="w-full h-full min-h-[200px] object-cover transition-all duration-500 group-hover:blur-xs group-hover:brightness-[0.7]" 
           />
         </div>
 
-        {/* Overlay au survol (Texte sortant du bas) */}
-        <div className="absolute inset-x-0 bottom-0 z-20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
-          <div className="bg-black/80 backdrop-blur-md p-6 m-2 rounded-lg border border-white/10">
-            <h3 className="text-white font-bold text-lg mb-1">{item.title}</h3>
-            <p className="text-gray-200 text-sm leading-relaxed">
-              {item.description || "Cliquez pour découvrir ce projet en détail."}
-            </p>
-            <span className="inline-block mt-3 text-xs font-semibold uppercase tracking-wider text-blue-400">
-              Voir le projet &rarr;
-            </span>
-          </div>
+        <div className="absolute inset-0 flex items-center justify-center p-8 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+          <p className="font-sn-pro text-white text-sm md:text-base text-center leading-relaxed max-w-[85%] font-regular">
+            {item.description}
+          </p>
         </div>
+
+        <div className="absolute inset-0 flex flex-col justify-end items-start p-6 z-20 pointer-events-none">
+          <p className="font-sn-pro text-gray-200 text-sm font-regular opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+            Découvrir &rarr;
+          </p>
+        </div>
+
+        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       </motion.div>
     </div>
   );
 
   return item.url ? (
-    <a href={item.url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-      {content}
-    </a>
+    <a href={item.url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">{content}</a>
   ) : (
-    <Link href={`/project/${item.id}`} className="block w-full h-full">
-      {content}
-    </Link>
+    <Link href={`/project/${item.id}`} className="block w-full h-full">{content}</Link>
   );
 }
 
