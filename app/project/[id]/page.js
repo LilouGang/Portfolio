@@ -18,7 +18,7 @@ export default function ProjectPage({ params: paramsPromise }) {
   switch (project.id) {
     case 1:
       return <IcelandPage project={project} />;
-    case 2:
+    case 6:
       return <ArbrePage project={project} />;
     default:
       return <ProjectPageNotAvailable project={project} />;
