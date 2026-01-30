@@ -50,7 +50,7 @@ export default function IcelandPage({ project }) {
   return (
     <main ref={pageRef} className="bg-white text-black min-h-screen overflow-x-hidden selection:bg-blue-500 selection:text-white">
       
-      <Cursor mousePosition={mousePosition} cursorVariant={cursorVariant} />
+      {!lightboxOpen && <Cursor mousePosition={mousePosition} cursorVariant={cursorVariant} />}
       <IcelandHeader />
 
       <section className="relative h-screen w-full">
@@ -98,27 +98,54 @@ export default function IcelandPage({ project }) {
         </div>
       </section>
 
-      <section className="relative bg-white z-10 py-20 px-0">
-        <div className="flex flex-row gap-0 items-start max-w-full">
+      {/* --- Section 4: GALERIE --- */}
+      <section className="relative bg-white py-20 z-10">
+        {/* Titre de la galerie */}
+        <div className="max-w-7xl mx-auto mb-20 text-center px-8">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-3xl md:text-5xl font-['Boldonse',serif]"
+          >
+            Galerie
+          </motion.h2>
+        </div>
+
+        {/* Mur d'images asymétrique */}
+        <div className="flex flex-row gap-0 items-start w-full">
           
           {/* Colonne 1 */}
-          <div className="flex-1 flex flex-col pt-0">
+          <div className="flex-1 flex flex-col">
             {icelandData.gallery.filter((_, i) => i % 3 === 0).map((photo, i) => (
-              <PhotoCard key={i} photo={photo} index={i} onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} />
+              <PhotoCard 
+                key={`col1-${i}`} 
+                photo={photo} 
+                onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} 
+              />
             ))}
           </div>
 
-          {/* Colonne 2 - Décalée de 80px vers le bas */}
-          <div className="flex-1 flex flex-col pt-20">
+          {/* Colonne 2 : Décalage haut */}
+          <div className="flex-1 flex flex-col pt-24">
             {icelandData.gallery.filter((_, i) => i % 3 === 1).map((photo, i) => (
-              <PhotoCard key={i} photo={photo} index={i} onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} />
+              <PhotoCard 
+                key={`col2-${i}`} 
+                photo={photo} 
+                onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} 
+              />
             ))}
           </div>
 
-          {/* Colonne 3 - Décalée de 40px vers le bas */}
-          <div className="flex-1 flex flex-col pt-10">
+          {/* Colonne 3 : Décalage haut */}
+          <div className="flex-1 flex flex-col pt-12">
             {icelandData.gallery.filter((_, i) => i % 3 === 2).map((photo, i) => (
-              <PhotoCard key={i} photo={photo} index={i} onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} />
+              <PhotoCard 
+                key={`col3-${i}`} 
+                photo={photo} 
+                onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} 
+              />
             ))}
           </div>
 
