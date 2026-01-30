@@ -23,7 +23,6 @@ export default function Lightbox({ images, currentIndex, onClose }) {
 
   return (
     <motion.div
-      // Fond plus clair (30%) et flou très subtil (2px)
       className="fixed inset-0 z-9999 flex items-center justify-center p-4 md:p-12 bg-black/30 backdrop-blur-[2px]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

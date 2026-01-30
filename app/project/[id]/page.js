@@ -4,6 +4,7 @@ import React, { use } from 'react';
 import Link from 'next/link';
 import { galleryItems } from '@/lib/data';
 import IcelandPage from './iceland/IcelandPage';
+import ArbrePage from './arbre/ArbrePage';
 
 export default function ProjectPage({ params: paramsPromise }) {
   const params = use(paramsPromise);
@@ -17,6 +18,8 @@ export default function ProjectPage({ params: paramsPromise }) {
   switch (project.id) {
     case 1:
       return <IcelandPage project={project} />;
+    case 2:
+      return <ArbrePage project={project} />;
     default:
       return <ProjectPageNotAvailable project={project} />;
   }
