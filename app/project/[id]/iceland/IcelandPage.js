@@ -45,8 +45,7 @@ export default function IcelandPage({ project }) {
   }, []);
 
   const heroImageY = useTransform(scrollYProgress, [0, 0.2], ["0%", "-20%"]);
-  const heroTitleY = useTransform(scrollYProgress, [0, 0.2], ["0%", "-500%"]);
-  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+  const heroTitleY = useTransform(scrollYProgress, [0, 0.1], ["0%", "-500%"]);
 
   return (
     <main ref={pageRef} className="bg-white text-black min-h-screen overflow-x-hidden selection:bg-blue-500 selection:text-white">
@@ -62,19 +61,23 @@ export default function IcelandPage({ project }) {
             style={{ y: heroImageY }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <img src={project.imageUrl} className="w-full h-full object-cover" alt={project.title} />
+            <img 
+              src="/images/iceland/iceland_main.jpg" 
+              className="w-full h-full object-cover" 
+              alt={project.title}
+            />
           </motion.div>
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <motion.h1
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 3.0, ease: "easeInOut", delay: 0.5 }} 
-              style={{ opacity: heroTitleOpacity, y: heroTitleY }}
-              className="text-[15vw] font-black font-['Boldonse',serif] tracking-tighter leading-[1.4] text-transparent bg-clip-text bg-linear-to-b from-white/80 to-black/5"
-            >
-              ISLANDE
-            </motion.h1>
-          </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <motion.h1
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 3.0, ease: "easeInOut", delay: 0.5 }} 
+                style={{ y: heroTitleY }}
+                className="drop-shadow-[0_0_15px_rgba(115,106,98,0.4)] text-[15vw] font-black font-['Boldonse',serif] tracking-tighter leading-[1.4] text-transparent bg-clip-text bg-linear-to-b from-[#736A62] via-[#403E3F]/70 to-transparent"
+              >
+                ISLANDE
+              </motion.h1>
+            </div>
         </div>
       </section>
 
@@ -95,22 +98,30 @@ export default function IcelandPage({ project }) {
         </div>
       </section>
 
-      <section className="relative bg-white py-20 px-8 z-10">
-        <div className="max-w-7xl mx-auto mb-16 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-['Boldonse',serif]"
-          >
-            Galerie
-          </motion.h2>
-        </div>
-        <div className="max-w-7xl mx-auto columns-1 sm:columns-2 md:columns-3 gap-8 space-y-8">
-          {icelandData.gallery.map((photo, i) => ( 
-            <PhotoCard key={i} photo={photo} index={i} onOpenLightbox={openLightbox} />
-          ))}
+      <section className="relative bg-white z-10 py-20 px-0">
+        <div className="flex flex-row gap-0 items-start max-w-full">
+          
+          {/* Colonne 1 */}
+          <div className="flex-1 flex flex-col pt-0">
+            {icelandData.gallery.filter((_, i) => i % 3 === 0).map((photo, i) => (
+              <PhotoCard key={i} photo={photo} index={i} onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} />
+            ))}
+          </div>
+
+          {/* Colonne 2 - Décalée de 80px vers le bas */}
+          <div className="flex-1 flex flex-col pt-20">
+            {icelandData.gallery.filter((_, i) => i % 3 === 1).map((photo, i) => (
+              <PhotoCard key={i} photo={photo} index={i} onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} />
+            ))}
+          </div>
+
+          {/* Colonne 3 - Décalée de 40px vers le bas */}
+          <div className="flex-1 flex flex-col pt-10">
+            {icelandData.gallery.filter((_, i) => i % 3 === 2).map((photo, i) => (
+              <PhotoCard key={i} photo={photo} index={i} onOpenLightbox={() => openLightbox(icelandData.gallery.indexOf(photo))} />
+            ))}
+          </div>
+
         </div>
       </section>
 
