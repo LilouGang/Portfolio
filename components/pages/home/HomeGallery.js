@@ -81,7 +81,7 @@ function GalleryItem({ item, onImageEnter, onImageLeave, setBgColor, defaultColo
         </div>
 
         <div className="absolute inset-0 flex items-center justify-center p-8 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-          <p className="font-sn-pro text-white text-sm md:text-base text-center leading-relaxed max-w-[85%] font-regular">
+          <p className="font-sn-pro text-white text-sm md:text-base text-center leading-relaxed max-w-[85%] font-regular whitespace-pre-line">
             {item.description}
           </p>
         </div>
