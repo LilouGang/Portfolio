@@ -11,19 +11,15 @@ import { Heart, Infinity, Link2Off } from 'lucide-react';
 import PersonNode from './PersonNode';
 import 'reactflow/dist/style.css';
 
-// --- 1. LIEN CUSTOM ---
 function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, style = {}, markerEnd, data }) {
   const { type } = data || {};
   const isConjugal = ['married', 'couple', 'divorced'].includes(type);
 
-  // LOGIQUE DU TRACÉ :
-  // Conjugal = Droit
-  // Sang = SmoothStep avec un PETIT arrondi (8px) pour casser l'angle droit strict
   const [edgePath, labelX, labelY] = isConjugal
     ? getStraightPath({ sourceX, sourceY, targetX, targetY })
     : getSmoothStepPath({ 
         sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition, 
-        borderRadius: 8, // <--- 8px : Arrondi léger (ni carré, ni trop rond)
+        borderRadius: 8,
         offset: 20
       });
 
