@@ -6,9 +6,8 @@ import {
   useEdgesState, 
   useReactFlow 
 } from 'reactflow';
-import { initialPeople, initialLinks } from '@/lib/arbreData';
+import { initialPeople, initialLinks } from './arbreData';
 import { getLayoutedElements } from './components/FamilyLayout';
-
 import SidebarStats from './components/SidebarStats'; 
 import SidebarLayout from './components/SidebarLayout'; 
 import TreeCanvas from './components/TreeCanvas';
