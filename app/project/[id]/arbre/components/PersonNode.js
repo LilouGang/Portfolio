@@ -1,7 +1,6 @@
 import { Handle, Position } from 'reactflow';
 
-// --- ICÔNES SUR MESURE (Style Silhouette FamilySearch) ---
-
+// --- ICÔNES SVG ---
 const MaleIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
@@ -21,49 +20,115 @@ const UnknownIcon = () => (
 );
 
 export default function PersonNode({ data }) {
-  const { viewMode, firstname, lastname, birthDate, deathDate, isDimmed, job, category, sex } = data;
+  const { viewMode, firstname, lastname, birthDate, deathDate, isDimmed, job, category, sex, status } = data;
 
-  const formatDates = () => {
-    if (!birthDate) return ""; 
-    const bYear = birthDate.split('/').pop(); 
-    const dYear = deathDate ? deathDate.split('/').pop() : '';
-    if (!dYear) return `° ${bYear}`;
-    return `${bYear} - ${dYear}`;
+  // --- 1. CALCULS ROBUSTES ---
+  const getYear = (dateStr) => {
+    if (!dateStr) return null;
+    const cleanStr = dateStr.toString().trim();
+    if (cleanStr.match(/^\d{4}$/)) return parseInt(cleanStr);
+    if (cleanStr.includes('/')) {
+      const parts = cleanStr.split('/');
+      const year = parseInt(parts[parts.length - 1]);
+      return isNaN(year) ? null : year;
+    }
+    return null;
   };
 
-  // --- COULEURS DOUCES (FAMILY SEARCH STYLE) ---
-  const getGenderStyle = () => {
-    // Homme : Bleu Ardoise doux / Femme : Vieux Rose doux
+  const bYear = getYear(birthDate);
+  const dYear = getYear(deathDate);
+  const currentYear = new Date().getFullYear();
+
+  let calculatedAge = null;
+  if (bYear) {
+    if (dYear) {
+      calculatedAge = dYear - bYear;
+    } else if (status === 'alive') {
+      calculatedAge = currentYear - bYear;
+    }
+  }
+
+  // --- 2. GESTION DES MODES ---
+  const isJobMode = viewMode === 'job';
+  const isAgeMode = viewMode === 'age';
+  const isLocationMode = viewMode === 'location'; 
+  const isClassicMode = !isJobMode && !isAgeMode && !isLocationMode;
+
+  // --- 3. COULEURS ADOUCIES (Grade 200 Fond / 400 Bordure) ---
+  const getCardStyle = () => {
+    // MODE NORMAL (Blanc)
+    if (!isAgeMode) {
+      if (isJobMode && category) {
+        const jobColors = { 
+          'agriculture': 'bg-green-100 border-green-500 text-green-950', 
+          'artisanat': 'bg-orange-100 border-orange-500 text-orange-950', 
+          'sante': 'bg-rose-100 border-rose-500 text-rose-950', 
+          'tech': 'bg-indigo-100 border-indigo-500 text-indigo-950', 
+          'droit': 'bg-blue-100 border-blue-600 text-blue-950', 
+          'commerce': 'bg-yellow-100 border-yellow-500 text-yellow-950' 
+        };
+        return jobColors[category] || 'bg-white border-slate-300 text-slate-900';
+      }
+      return 'bg-white border-slate-300 text-slate-900';
+    }
+
+    // MODE AGE : Fond 200 (Visible) + Bordure 400 (Douce)
+    
+    // 1. Vivant (Bleu Ciel)
+    if (status === 'alive') {
+      return 'bg-sky-200 border-sky-400 text-sky-900';
+    }
+
+    // 2. Décédé
+    if (calculatedAge !== null) {
+      // < 40 : Rouge
+      if (calculatedAge < 40) return 'bg-red-200 border-red-400 text-red-900';
+      // 40-70 : Orange
+      if (calculatedAge < 70) return 'bg-orange-200 border-orange-400 text-orange-900';
+      // 70-90 : Teal (Bleu-Vert foncé)
+      if (calculatedAge < 90) return 'bg-teal-200 border-teal-400 text-teal-900'; 
+      // 90+ : Jaune/Ambre
+      return 'bg-amber-200 border-amber-400 text-amber-900';
+    }
+
+    // Inconnu : Gris
+    return 'bg-slate-200 border-slate-400 text-slate-700';
+  };
+
+  // --- 4. COULEURS LOGO ---
+  const getLogoStyle = () => {
     if (sex === 'F') return 'bg-[#C27E8E] text-white'; 
     if (sex === 'M') return 'bg-[#5A7D9A] text-white'; 
-    return 'bg-slate-400 text-white'; 
+    return 'bg-slate-500 text-white';
   };
 
-  // On sélectionne la bonne icône
-  const renderIcon = () => {
-    if (sex === 'F') return <FemaleIcon />;
-    if (sex === 'M') return <MaleIcon />;
-    return <UnknownIcon />;
+  // --- 5. TEXTES ---
+  const getClassicLabel = () => {
+    if (bYear && dYear) return `${bYear} - ${dYear}`;
+    if (!bYear && dYear) return `- ${dYear}`;
+    if (status === 'alive') return sex === 'F' ? 'Vivante' : 'Vivant';
+    if (status === 'deceased' && !dYear && !bYear) return sex === 'F' ? 'Décédée' : 'Décédé';
+    if (bYear && status === 'deceased' && !dYear) return `${bYear} - ${sex === 'F' ? 'Décédée' : 'Décédé'}`;
+    if (bYear) return `${bYear} - ?`;
+    return "";
   };
 
-  const getBorderStyle = () => {
-    if (viewMode === 'job' && category) {
-      const colors = { 'agriculture': 'border-green-500', 'artisanat': 'border-orange-500', 'sante': 'border-rose-500', 'tech': 'border-indigo-500', 'droit': 'border-blue-800', 'commerce': 'border-yellow-500' };
-      return colors[category] || 'border-slate-200';
-    }
-    return 'border-slate-200';
+  const getAgeLabel = () => {
+    if (status === 'alive') return sex === 'F' ? 'VIVANTE' : 'VIVANT';
+    if (calculatedAge !== null) return `${calculatedAge} ANS`;
+    return "?";
   };
 
   return (
     <div 
       className={`
-        w-[140px] h-[220px] 
-        bg-white rounded-lg shadow-md border-2
+        w-[140px] h-[240px] 
+        rounded-lg shadow-sm border-[2px] 
         flex flex-col items-center justify-between
         pt-6 pb-4 px-2
-        transition-all duration-300
-        ${getBorderStyle()}
-        ${isDimmed ? 'opacity-20 grayscale' : 'opacity-100 hover:shadow-xl hover:scale-105'}
+        transition-colors duration-300 ease-in-out
+        ${getCardStyle()}
+        ${isDimmed ? 'opacity-30 grayscale' : 'opacity-100 hover:shadow-md hover:scale-105'}
       `}
     >
       <Handle type="source" position={Position.Top} id="top" className="opacity-0" />
@@ -71,36 +136,61 @@ export default function PersonNode({ data }) {
       <Handle type="target" position={Position.Left} id="left" className="opacity-0" />
       <Handle type="source" position={Position.Right} id="right" className="opacity-0" />
 
-      {/* 1. GROS LOGO GENRE (Cercle plus grand) */}
+      {/* LOGO */}
       <div className={`
         flex items-center justify-center w-16 h-16 rounded-full shadow-inner mb-2
-        ${getGenderStyle()}
+        ${getLogoStyle()}
       `}>
-        {renderIcon()}
+        {sex === 'F' ? <FemaleIcon /> : (sex === 'M' ? <MaleIcon /> : <UnknownIcon />)}
       </div>
 
-      {/* 2. IDENTITÉ */}
-      <div className="flex flex-col items-center justify-center text-center w-full flex-grow">
-        <span className="text-slate-600 italic font-light text-sm leading-tight mb-1">
+      {/* IDENTITÉ */}
+      <div className="flex flex-col items-center justify-center text-center w-full flex-grow z-10">
+        <span style={{ fontFamily: "'Nunito', sans-serif" }} className="italic font-light text-sm leading-tight mb-1 opacity-90">
           {firstname}
         </span>
-        <span className="text-slate-900 uppercase font-medium text-sm tracking-wide leading-tight break-words w-full px-1">
+        <span style={{ fontFamily: "'Nunito', sans-serif" }} className="uppercase font-extrabold text-sm tracking-wide leading-tight break-words w-full px-1">
           {lastname}
         </span>
       </div>
 
-      {/* 3. DATES */}
-      <div className="w-full border-t border-slate-100 pt-3 mt-1 text-center">
-        <span className="text-[11px] text-slate-500 font-medium tracking-widest block">
-          {formatDates()}
+      {/* ZONE BASSE */}
+      <div className={`w-full pt-3 mt-1 h-[24px] relative flex items-center justify-center overflow-hidden border-t border-black/10`}>
+        
+        {/* CLASSIQUE */}
+        <span 
+          className={`
+            absolute text-[10px] font-bold tracking-widest
+            transition-transform duration-300 ease-in-out
+            ${isClassicMode ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+          `}
+        >
+          {getClassicLabel()}
         </span>
-      </div>
 
-      {viewMode === 'job' && job && (
-        <div className="absolute -bottom-3 bg-white shadow-sm text-[9px] px-2 py-0.5 rounded-full border border-slate-200 text-slate-600 whitespace-nowrap z-10">
-          {job}
-        </div>
-      )}
+        {/* AGE (MODE 4) */}
+        <span 
+          className={`
+            absolute text-[12px] font-black tracking-widest uppercase
+            transition-transform duration-300 ease-in-out
+            ${isAgeMode ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+          `}
+        >
+          {getAgeLabel()}
+        </span>
+
+        {/* MÉTIER */}
+        <span 
+          className={`
+            absolute text-[10px] font-bold uppercase tracking-wide truncate w-full text-center
+            transition-transform duration-300 ease-in-out
+            ${isJobMode ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'}
+          `}
+        >
+          {job || "-"}
+        </span>
+
+      </div>
     </div>
   );
 }
