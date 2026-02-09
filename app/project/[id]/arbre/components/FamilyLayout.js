@@ -4,7 +4,7 @@
 const NODE_WIDTH = 140;
 
 // Espaces
-const GAP_COUPLE_TIGHT = 30;  // Couple collé (si pas de risque de croisement)
+const GAP_COUPLE_TIGHT = 160;  // Couple collé (si pas de risque de croisement)
 const GAP_COUPLE_WIDE = 180;  // Couple écarté (SI les deux ont des parents -> Laisse passer les traits)
 const GAP_SIBLING = 50;       // Frères/Sœurs
 const GAP_COUSIN = 80;        // Cousins / Membres éloignés du groupe
