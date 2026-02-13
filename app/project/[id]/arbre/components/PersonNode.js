@@ -201,8 +201,8 @@ export default function PersonNode({ data }) {
   return (
     <div 
       className={`
-        w-[160px] h-[230px] 
-        rounded-lg shadow-sm border-[2px] 
+        w-40 h-[230px] 
+        rounded-lg shadow-sm border-2 
         flex flex-col items-center justify-between
         py-4 px-2
         transform transition-all duration-500 ease-in-out
@@ -226,9 +226,9 @@ export default function PersonNode({ data }) {
       </div>
 
       {/* IDENTITÉ */}
-      <div className="flex flex-col items-center justify-center text-center w-full flex-grow z-10 -mt-1">
+      <div className="flex flex-col items-center justify-center text-center w-full grow z-10 -mt-1">
         <span className="italic font-light text-[15px] leading-tight mb-0.5 opacity-90 font-nunito">{firstname}</span>
-        <span className="font-extrabold text-base tracking-wide leading-tight break-words w-full px-1 font-nunito">{lastname}</span>
+        <span className="font-extrabold text-base tracking-wide leading-tight wrap-break-word w-full px-1 font-nunito">{lastname}</span>
       </div>
 
       {/* ZONE BASSE */}

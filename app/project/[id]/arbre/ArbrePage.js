@@ -8,6 +8,10 @@ import {
 } from 'reactflow';
 import { initialPeople, initialLinks } from '@/lib/arbreData';
 import { getLayoutedElements } from './components/FamilyLayout';
+
+// --- IMPORT DU VERROUILLAGE ---
+import PasswordLock from './components/PasswordLock'; 
+
 import SidebarStats from './components/SidebarStats'; 
 import SidebarLayout from './components/SidebarLayout'; 
 import TreeCanvas from './components/TreeCanvas';
@@ -43,33 +47,36 @@ export default function ArbrePage() {
   };
 
   return (
-    <div className="h-screen w-full bg-[#fdfbf7] text-slate-800 relative overflow-hidden font-sans">
-      <div className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply" 
-           style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/natural-paper.png')` }}>
-      </div>
-
-      <ReactFlowProvider>
-        <AutoZoom />
-
-        <SidebarStats viewMode={viewMode} setViewMode={setViewMode} />
-        
-        <SidebarLayout 
-          currentLayout={layoutDirection} 
-          onLayoutChange={handleLayoutChange} 
-        />
-        
-        <Legend viewMode={viewMode} />
-        
-        <div className="w-full h-full relative z-10">
-          <TreeCanvas 
-            nodes={nodes} 
-            edges={edges} 
-            onNodesChange={onNodesChange} 
-            onEdgesChange={onEdgesChange}
-            viewMode={viewMode}
-          />
+    // ON ENGLOBE TOUT LE CONTENU DANS LE PASSWORDLOCK
+    <PasswordLock>
+      <div className="h-screen w-full bg-[#fdfbf7] text-slate-800 relative overflow-hidden font-sans">
+        <div className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply" 
+             style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/natural-paper.png')` }}>
         </div>
-      </ReactFlowProvider>
-    </div>
+
+        <ReactFlowProvider>
+          <AutoZoom />
+
+          <SidebarStats viewMode={viewMode} setViewMode={setViewMode} />
+          
+          <SidebarLayout 
+            currentLayout={layoutDirection} 
+            onLayoutChange={handleLayoutChange} 
+          />
+          
+          <Legend viewMode={viewMode} />
+          
+          <div className="w-full h-full relative z-10">
+            <TreeCanvas 
+              nodes={nodes} 
+              edges={edges} 
+              onNodesChange={onNodesChange} 
+              onEdgesChange={onEdgesChange}
+              viewMode={viewMode}
+            />
+          </div>
+        </ReactFlowProvider>
+      </div>
+    </PasswordLock>
   );
 }
