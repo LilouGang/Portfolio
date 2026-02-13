@@ -1,7 +1,7 @@
 import { Handle, Position } from 'reactflow';
 import { Ban, Star } from 'lucide-react';
 
-// --- ICÔNES (Sexe) ---
+// --- ICÔNES ---
 const MaleIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-9 h-9">
     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
@@ -20,7 +20,6 @@ const UnknownIcon = () => (
   </svg>
 );
 
-// --- ICÔNE DECES (Croix) ---
 const DeathIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3 text-slate-400">
     <path d="M10 2h4v6h6v4h-6v10h-4v-10h-6v-4h6z" /> 
@@ -28,11 +27,11 @@ const DeathIcon = () => (
 );
 
 export default function PersonNode({ data }) {
-  const { viewMode, firstname, lastname, birthDate, deathDate, isDimmed, job, category, sex, birthPlace, region } = data;
+  const { viewMode, firstname, lastname, birthDate, deathDate, isDimmed, job, sex, birthPlace, region } = data;
 
-  // --- 1. FONCTIONS DE DATE ---
+  // --- 1. LOGIQUE DATES & STATUT ---
   const formatDate = (dateString) => {
-    if (!dateString) return "?";
+    if (!dateString) return null;
     if (dateString.length === 4) return dateString;
     if (dateString.length === 7 && dateString.includes('-')) {
        const [y, m] = dateString.split('-');
@@ -47,111 +46,156 @@ export default function PersonNode({ data }) {
   };
 
   const getYear = (str) => {
-    if (!str) return "?";
-    const match = str.match(/^\d{4}/);
-    return match ? match[0] : "?";
+    if (!str) return null;
+    const match = str.match(/\d{4}/);
+    return match ? parseInt(match[0]) : null;
   };
 
-  // --- 2. CALCULS ---
-  const isAlive = !deathDate || deathDate.trim() === '';
-  const birthDisplay = formatDate(birthDate);
-  const deathDisplay = formatDate(deathDate);
+  const isAlive = deathDate && deathDate.trim() === 'V'; 
+  const hasDeathDate = deathDate && deathDate.trim() !== '' && deathDate.trim() !== 'V';
 
-  const currentYear = new Date().getFullYear();
-  let age = null;
   const bYear = getYear(birthDate);
   const dYear = getYear(deathDate);
-  const bYearInt = parseInt(bYear);
-  const dYearInt = parseInt(dYear);
+  const currentYear = new Date().getFullYear();
+  
+  let age = null;
 
-  if (!isNaN(bYearInt)) {
-    if (!isNaN(dYearInt)) age = dYearInt - bYearInt;
-    else if (isAlive) age = currentYear - bYearInt;
+  if (bYear !== null) {
+    if (isAlive) {
+      age = currentYear - bYear;
+    } else if (dYear !== null) {
+      age = dYear - bYear;
+    }
   }
 
-  // --- 3. MODES ---
+  const birthDisplay = formatDate(birthDate);
+  const deathDisplay = hasDeathDate ? formatDate(deathDate) : null;
+
+  // --- 2. INTELLIGENCE (Classification Auto) ---
+  const detectJobCategory = (jobTitle) => {
+    if (!jobTitle) return 'unknown';
+    const j = jobTitle.toLowerCase();
+    
+    if (j.includes('cultivat') || j.includes('laboureur') || j.includes('proprio') || j.includes('bûcheron')) return 'agriculture';
+    if (j.includes('ouvrier') || j.includes('tréfileur') || j.includes('mine') || j.includes('usine') || j.includes('atelier')) return 'industrie';
+    if (j.includes('artisan') || j.includes('cordonnier') || j.includes('lingère') || j.includes('marchand') || j.includes('traiteur')) return 'artisanat';
+    if (j.includes('chauffeur') || j.includes('transport')) return 'transport';
+    if (j.includes('secrétaire') || j.includes('cadre') || j.includes('employé')) return 'services';
+    if (j.includes('militaire') || j.includes('pénitentier') || j.includes('armée') || j.includes('gendarme')) return 'armee';
+    if (j.includes('journalier') || j.includes('saisonnière') || j.includes('femme de chambre') || j.includes('domestique')) return 'journalier';
+    if (j.includes('étudiant') || j.includes('élève')) return 'etudes';
+
+    return 'unknown';
+  };
+  const jobCategory = detectJobCategory(job);
+
+  const detectRegion = (place) => {
+    if (!place) return 'unknown';
+    const p = place.toLowerCase();
+
+    if (p.includes('ruaux') || p.includes('nabord') || p.includes('amé') || p.includes('toul') || p.includes('troyes') || p.includes('nogent')) return 'grandest';
+    if (p.includes('sormery') || p.includes('lasson') || p.includes('vergigny') || p.includes('turny') || p.includes('auxon') || p.includes('migennes') || p.includes('tonnerre') || p.includes('clérimois')) return 'bourgogne';
+    if (p.includes('roide') || p.includes('audincourt') || p.includes('glaissans') || p.includes('undervilier')) return 'franchecomte';
+    if (p.includes('denain') || p.includes('nord')) return 'nord';
+    if (p.includes('paris') || p.includes('melun') || p.includes('evry')) return 'idf';
+    if (p.includes('tajo') || p.includes('espagne')) return 'etranger';
+
+    return 'autre';
+  };
+  const regionCategory = detectRegion(birthPlace);
+
+  // --- 3. MODES & STYLES ---
   const isJobMode = viewMode === 'job';
   const isAgeMode = viewMode === 'age';
   const isLocationMode = viewMode === 'location';
   const isClassicMode = !isJobMode && !isAgeMode && !isLocationMode;
 
-  // --- 4. STYLES ---
-  const normalizeText = (txt) => txt ? txt.toLowerCase() : "";
-  const placeText = normalizeText(birthPlace) + " " + normalizeText(region);
+  const hasDataForMode = () => {
+    if (isJobMode) return jobCategory !== 'unknown';
+    if (isLocationMode) return regionCategory !== 'unknown';
+    if (isAgeMode) return age !== null;
+    return true; 
+  };
+  const isDimmedMode = !hasDataForMode();
+
+  // --- 4. GESTION DE L'OPACITÉ ET DU FLOU ---
+  const getOpacityClass = () => {
+    // CAS 1 : Sélection d'une personne dans l'arbre (Priorité haute)
+    // Si isDimmed est vrai, c'est que quelqu'un d'autre est cliqué et je ne suis pas lié.
+    if (isDimmed) return 'opacity-20 grayscale blur-[1px]'; 
+
+    // CAS 2 : Mode Statistique (Priorité moyenne)
+    // Personne n'est cliqué, mais je n'ai pas la donnée pour le mode en cours (ex: pas de métier).
+    if (isDimmedMode && !isClassicMode) return 'opacity-50 grayscale';
+
+    // CAS 3 : Normal
+    return 'opacity-100 hover:shadow-xl hover:scale-105';
+  };
 
   const getLocationStyle = () => {
-    if (placeText.includes('bretagne')) return 'bg-teal-200 border-teal-600 text-teal-950';
-    if (placeText.includes('île-de-france') || placeText.includes('paris')) return 'bg-blue-200 border-blue-600 text-blue-950';
-    if (placeText.includes('rhône') || placeText.includes('lyon')) return 'bg-red-200 border-red-600 text-red-950';
-    if (placeText.includes('paca') || placeText.includes('provence')) return 'bg-yellow-200 border-yellow-600 text-yellow-950';
-    if (placeText.includes('nord')) return 'bg-sky-200 border-sky-600 text-sky-950';
-    return 'bg-slate-200 border-slate-500 text-slate-800';
+    const map = {
+      'grandest': 'bg-emerald-200 border-emerald-600 text-emerald-950',
+      'bourgogne': 'bg-amber-200 border-amber-600 text-amber-950',
+      'franchecomte': 'bg-violet-200 border-violet-600 text-violet-950',
+      'nord': 'bg-cyan-200 border-cyan-600 text-cyan-950',
+      'idf': 'bg-blue-200 border-blue-600 text-blue-950',
+      'etranger': 'bg-fuchsia-200 border-fuchsia-600 text-fuchsia-950',
+      'autre': 'bg-slate-100 border-slate-300 text-slate-500'
+    };
+    return map[regionCategory] || map['autre'];
+  };
+
+  const getJobStyle = () => {
+    if (!job) return 'bg-slate-100 border-slate-300 text-slate-500';
+    const map = {
+      'agriculture': 'bg-lime-200 border-lime-600 text-lime-950',
+      'industrie': 'bg-slate-300 border-slate-600 text-slate-900',
+      'artisanat': 'bg-orange-200 border-orange-600 text-orange-950',
+      'transport': 'bg-indigo-200 border-indigo-600 text-indigo-950',
+      'services': 'bg-pink-200 border-pink-600 text-pink-950',
+      'armee': 'bg-blue-200 border-blue-800 text-blue-950',
+      'journalier': 'bg-stone-200 border-stone-500 text-stone-800',
+      'etudes': 'bg-teal-200 border-teal-600 text-teal-950',
+      'unknown': 'bg-slate-100 border-slate-300 text-slate-500'
+    };
+    return map[jobCategory] || map['unknown'];
   };
 
   const getCardStyle = () => {
-    if (!isAgeMode && !isLocationMode && !isJobMode) return 'bg-white border-slate-300 text-slate-900';
-    if (isJobMode) {
-      if (!job) return 'bg-slate-100 border-slate-300 text-slate-500';
-      const jobColors = { 
-        'agriculture': 'bg-green-200 border-green-600 text-green-950', 
-        'artisanat': 'bg-orange-200 border-orange-600 text-orange-950', 
-        'sante': 'bg-rose-200 border-rose-600 text-rose-950', 
-        'tech': 'bg-indigo-200 border-indigo-600 text-indigo-950', 
-        'droit': 'bg-blue-200 border-blue-800 text-blue-950', 
-        'commerce': 'bg-yellow-200 border-yellow-600 text-yellow-950' 
-      };
-      return jobColors[category] || 'bg-white border-slate-300 text-slate-900';
-    }
+    if (isClassicMode) return 'bg-white border-slate-300 text-slate-900';
+    // Si la carte est estompée par le mode (pas de données), on met un fond neutre
+    if (isDimmedMode) return 'bg-slate-50 border-slate-200 text-slate-400';
+
+    if (isJobMode) return getJobStyle();
     if (isLocationMode) return getLocationStyle();
-    if (isAlive) return 'bg-sky-200 border-sky-600 text-sky-950';
-    if (age !== null) {
-      if (age < 40) return 'bg-red-200 border-red-600 text-red-950';
-      if (age < 70) return 'bg-orange-200 border-orange-600 text-orange-950';
-      if (age < 90) return 'bg-teal-200 border-teal-600 text-teal-950'; 
-      return 'bg-amber-200 border-amber-600 text-amber-950';
+    
+    if (isAgeMode) {
+      if (isAlive) return 'bg-sky-200 border-sky-600 text-sky-950';
+      if (age !== null) {
+        if (age < 60) return 'bg-red-200 border-red-600 text-red-950';
+        if (age < 80) return 'bg-orange-200 border-orange-600 text-orange-950';
+        if (age < 90) return 'bg-teal-200 border-teal-600 text-teal-950'; 
+        return 'bg-yellow-200 border-yellow-600 text-yellow-950'; 
+      }
+      return 'bg-slate-200 border-slate-500 text-slate-800';
     }
-    return 'bg-slate-200 border-slate-500 text-slate-800';
+
+    return 'bg-white border-slate-300 text-slate-900';
   };
 
   const getLogoStyle = () => {
+    // Si la carte est estompée (quelle que soit la raison), on grise le logo
+    if (isDimmed || (isDimmedMode && !isClassicMode)) return 'bg-slate-200 text-white';
+    
     if (sex === 'F') return 'bg-[#C27E8E] text-white'; 
     if (sex === 'M') return 'bg-[#5A7D9A] text-white'; 
     return 'bg-slate-500 text-white';
   };
 
-  // --- RENDU CONTENUS ---
-  const renderClassicDates = () => (
-    <div className="flex flex-col items-center leading-tight w-full px-1 gap-0.5">
-      
-      {/* Ligne Naissance : Étoile + Date */}
-      <div className="flex items-center gap-1.5">
-        <Star size={10} className="text-slate-400 fill-slate-400" />
-        <span className="font-bold text-[12px] text-slate-700 whitespace-nowrap">
-          {birthDisplay}
-        </span>
-      </div>
-      
-      {isAlive ? (
-        // Vivant
-        <span className="text-[11px] font-bold text-sky-600 tracking-wide mt-0.5">
-          {sex === 'F' ? 'Vivante' : 'Vivant'}
-        </span>
-      ) : (
-        // Ligne Décès : Croix + Date
-        <div className="flex items-center gap-1.5">
-          <DeathIcon />
-          <span className="font-bold text-[12px] text-slate-700 whitespace-nowrap">
-            {deathDisplay}
-          </span>
-        </div>
-      )}
-    </div>
-  );
-
   const getAgeLabel = () => {
     if (isAlive) return sex === 'F' ? 'Vivante' : 'Vivant';
     if (age !== null) return `${age} ans`;
-    return "?";
+    return sex === 'F' ? 'Décédée' : 'Décédé';
   };
 
   return (
@@ -161,13 +205,10 @@ export default function PersonNode({ data }) {
         rounded-lg shadow-sm border-[2px] 
         flex flex-col items-center justify-between
         py-4 px-2
-        
         transform transition-all duration-500 ease-in-out
         scale-100 origin-center will-change-transform
-        
         ${getCardStyle()}
-        
-        ${isDimmed ? 'opacity-30 grayscale blur-[1px]' : 'opacity-100 hover:shadow-xl hover:scale-105'}
+        ${getOpacityClass()}
       `}
     >
       <Handle type="source" position={Position.Top} id="top" className="opacity-0" />
@@ -175,63 +216,58 @@ export default function PersonNode({ data }) {
       <Handle type="target" position={Position.Left} id="left" className="opacity-0" />
       <Handle type="source" position={Position.Right} id="right" className="opacity-0" />
 
-      {/* LOGO */}
+      {/* LOGO avec transition synchronisée */}
       <div className={`
-        flex items-center justify-center w-16 h-16 rounded-full shadow-inner mb-1
-        ${getLogoStyle()}
+          flex items-center justify-center w-16 h-16 rounded-full shadow-inner mb-1 
+          transition-colors duration-500 ease-in-out 
+          ${getLogoStyle()}
       `}>
         {sex === 'F' ? <FemaleIcon /> : (sex === 'M' ? <MaleIcon /> : <UnknownIcon />)}
       </div>
 
       {/* IDENTITÉ */}
       <div className="flex flex-col items-center justify-center text-center w-full flex-grow z-10 -mt-1">
-        <span className="italic font-light text-[15px] leading-tight mb-0.5 opacity-90 font-nunito">
-          {firstname}
-        </span>
-        <span className="font-extrabold text-base tracking-wide leading-tight break-words w-full px-1 font-nunito">
-          {lastname}
-        </span>
+        <span className="italic font-light text-[15px] leading-tight mb-0.5 opacity-90 font-nunito">{firstname}</span>
+        <span className="font-extrabold text-base tracking-wide leading-tight break-words w-full px-1 font-nunito">{lastname}</span>
       </div>
 
       {/* ZONE BASSE */}
       <div className={`w-full h-[45px] relative flex items-center justify-center overflow-hidden mt-1`}>
         
-        <div className={`
-            absolute w-full flex justify-center
-            transition-transform duration-300 ease-in-out
-            ${isClassicMode ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}
-          `}
-        >
-          {renderClassicDates()}
+        {/* DATES CLASSIQUES */}
+        <div className={`absolute w-full flex justify-center transition-transform duration-300 ease-in-out ${isClassicMode ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
+          <div className="flex flex-col items-center leading-tight w-full px-1 gap-0.5">
+            <div className="flex items-center gap-1.5">
+              <Star size={10} className="text-slate-400 fill-slate-400" />
+              <span className="font-bold text-[12px] text-slate-700 whitespace-nowrap">{birthDisplay || "?"}</span>
+            </div>
+            {isAlive ? (
+              <span className="text-[11px] font-bold text-sky-600 tracking-wide mt-0.5">{sex === 'F' ? 'Vivante' : 'Vivant'}</span>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <DeathIcon />
+                <span className="font-bold text-[12px] text-slate-700 whitespace-nowrap">
+                  {hasDeathDate ? deathDisplay : (sex === 'F' ? 'Décédée' : 'Décédé')}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
-        <span className={`
-            absolute text-[15px] font-bold tracking-wide
-            transition-transform duration-300 ease-in-out
-            ${isAgeMode ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}
-          `}
-        >
+        {/* AGE */}
+        <span className={`absolute text-[15px] font-bold tracking-wide transition-transform duration-300 ease-in-out ${isAgeMode ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
           {getAgeLabel()}
         </span>
 
-        <span className={`
-            absolute text-[15px] font-bold tracking-wide truncate w-full text-center flex items-center justify-center
-            transition-transform duration-300 ease-in-out
-            ${isJobMode ? 'translate-y-0 opacity-100' : '-translate-y-12 opacity-0'}
-          `}
-        >
-          {job ? job : <Ban className="w-5 h-5 text-slate-400 opacity-50" />}
+        {/* MÉTIER */}
+        <span className={`absolute text-[13px] font-bold tracking-wide truncate w-full text-center flex items-center justify-center transition-transform duration-300 ease-in-out ${isJobMode ? 'translate-y-0 opacity-100' : '-translate-y-12 opacity-0'}`}>
+          {job || <Ban className="w-5 h-5 text-slate-300" />}
         </span>
 
-        <span className={`
-            absolute text-[15px] font-bold tracking-wide truncate w-full text-center flex items-center justify-center
-            transition-transform duration-300 ease-in-out
-            ${isLocationMode ? 'translate-y-0 opacity-100' : '-translate-y-12 opacity-0'}
-          `}
-        >
-          {placeText ? (birthPlace || region) : "?"}
+        {/* LIEU */}
+        <span className={`absolute text-[13px] font-bold tracking-wide truncate w-full text-center flex items-center justify-center transition-transform duration-300 ease-in-out ${isLocationMode ? 'translate-y-0 opacity-100' : '-translate-y-12 opacity-0'}`}>
+          {birthPlace || region || <Ban className="w-5 h-5 text-slate-300" />}
         </span>
-
       </div>
     </div>
   );

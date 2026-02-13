@@ -6,26 +6,29 @@ export default function Legend({ viewMode }) {
 
   const legends = {
     job: [
-      { label: 'Agriculture', color: 'bg-green-500' },
+      { label: 'Agriculture', color: 'bg-lime-500' },
+      { label: 'Industrie/Mines', color: 'bg-slate-500' },
       { label: 'Artisanat', color: 'bg-orange-500' },
-      { label: 'Santé', color: 'bg-rose-500' },
-      { label: 'Tech', color: 'bg-indigo-500' },
-      { label: 'Droit/Armée', color: 'bg-blue-800' },
-      { label: 'Commerce', color: 'bg-yellow-500' },
+      { label: 'Transport', color: 'bg-indigo-500' },
+      { label: 'Administration', color: 'bg-pink-500' },
+      { label: 'Armée/Droit', color: 'bg-blue-800' },
+      { label: 'Journalier', color: 'bg-stone-400' },
+      { label: 'Études', color: 'bg-teal-500' },
     ],
     location: [
-      { label: 'Bretagne', color: 'bg-teal-500' },
-      { label: 'Île-de-France', color: 'bg-blue-500' },
-      { label: 'Rhône-Alpes', color: 'bg-red-500' },
-      { label: 'PACA', color: 'bg-yellow-500' },
-      { label: 'Nord', color: 'bg-sky-500' },
+      { label: 'Vosges (88)', color: 'bg-emerald-500' },
+      { label: 'Yonne (89)', color: 'bg-amber-500' },
+      { label: 'Franche-Comté', color: 'bg-violet-500' },
+      { label: 'Nord (59)', color: 'bg-cyan-500' },
+      { label: 'Île-de-France', color: 'bg-blue-600' },
+      { label: 'Étranger', color: 'bg-fuchsia-500' },
     ],
     age: [
-      { label: 'Vivant', color: 'bg-sky-400' },       // Bleu Ciel
-      { label: '< 40 ans', color: 'bg-red-400' },      // Rouge
-      { label: '40-70 ans', color: 'bg-orange-400' },  // Orange
-      { label: '70-90 ans', color: 'bg-teal-400' },    // Teal
-      { label: 'Doyen (90+)', color: 'bg-amber-400' }, // Jaune
+      { label: 'Vivant', color: 'bg-sky-400' },       
+      { label: '< 60 ans', color: 'bg-red-400' },      // Prématuré
+      { label: '60-80 ans', color: 'bg-orange-400' },  // Moyen
+      { label: '80-90 ans', color: 'bg-teal-400' },    // Bon âge
+      { label: 'Doyen (90+)', color: 'bg-yellow-400' }, // Longévité
     ]
   };
 
