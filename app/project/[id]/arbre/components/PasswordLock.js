@@ -33,9 +33,9 @@ export default function PasswordLock({ children }) {
 
   if (loading) return null;
 
-  /*if (isAuthenticated) {
+  if (isAuthenticated) {
     return <>{children}</>;
-  }*/
+  }
 
   return (
     <div className="fixed inset-0 z-9999 bg-[#fdfbf7] flex flex-col items-center justify-center p-6 text-slate-800">
