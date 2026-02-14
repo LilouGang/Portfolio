@@ -121,12 +121,10 @@ export default function PersonNode({ data }) {
   // --- 4. GESTION DE L'OPACITÉ ET DU FLOU ---
   const getOpacityClass = () => {
     // CAS 1 : Sélection d'une personne dans l'arbre (Priorité haute)
-    // Si isDimmed est vrai, c'est que quelqu'un d'autre est cliqué et je ne suis pas lié.
-    if (isDimmed) return 'opacity-20 grayscale blur-[1px]'; 
+    if (isDimmed) return 'opacity-50 grayscale blur-[1px]'; 
 
     // CAS 2 : Mode Statistique (Priorité moyenne)
-    // Personne n'est cliqué, mais je n'ai pas la donnée pour le mode en cours (ex: pas de métier).
-    if (isDimmedMode && !isClassicMode) return 'opacity-50 grayscale';
+    if (isDimmedMode && !isClassicMode) return 'opacity-50 grayscale blur-[1px]';
 
     // CAS 3 : Normal
     return 'opacity-100 hover:shadow-xl hover:scale-105';
