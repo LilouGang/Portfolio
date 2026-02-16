@@ -6,6 +6,6 @@ export default function robots() {
         allow: '/',
       },
     ],
-    sitemap: 'https://killianlacaque.vercel.app/sitemap.xml',
+    sitemap: 'https://killianlacaque.com/sitemap.xml',
   };
 }

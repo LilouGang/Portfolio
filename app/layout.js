@@ -16,7 +16,7 @@ export const metadata = {
   openGraph: {
     title: 'Killian Lacaque | Portfolio',
     description: 'Curieux de nature. La découverte pour passion.',
-    url: 'https://killianlacaque.vercel.app/',
+    url: 'https://killianlacaque.com/',
     siteName: 'Killian Lacaque',
     locale: 'fr_FR',
     type: 'website',
@@ -46,8 +46,8 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "Person",
               "name": "Killian Lacaque",
-              "url": "https://killianlacaque.vercel.app",
-              "logo": "https://killianlacaque.vercel.app/favicon.ico",
+              "url": "https://killianlacaque.com",
+              "logo": "https://killianlacaque.com/favicon.ico",
               "sameAs": [
                 "https://github.com/killianlacaque",
                 "https://linkedin.com/in/killianlacaque"
@@ -62,14 +62,14 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "url": "https://killianlacaque.vercel.app",
+              "url": "https://killianlacaque.com",
               "name": "Killian Lacaque | Portfolio",
               "publisher": {
                 "@type": "Person",
                 "name": "Killian Lacaque",
                 "logo": {
                   "@type": "ImageObject",
-                  "url": "https://killianlacaque.vercel.app/favicon.ico"
+                  "url": "https://killianlacaque.com/favicon.ico"
                 }
               }
             }),
