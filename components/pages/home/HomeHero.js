@@ -20,7 +20,7 @@ export default function HomeHero({ onMouseEnter, onMouseLeave }) {
           className="text-5xl md:text-7xl lg:text-8xl font-bold font-['Playfair_Display',serif]"
           initial={{ opacity: 0, filter: 'blur(10px)' }}
           animate={{ opacity: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.55, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
           {userName}
         </motion.h1>
